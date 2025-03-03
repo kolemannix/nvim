@@ -8,6 +8,7 @@ vim.api.nvim_create_autocmd({ 'BufEnter', 'BufNewFile' }, {
 
 on_attach = function(client, bufnr)
   vim.lsp.inlay_hint.enable(true, { 0 })
+  client.server_capabilities.documentFormattingProvider = true
 
   local function named_opts(desc)
     return { noremap = true, silent = true, desc = desc, buffer = bufnr }
@@ -150,4 +151,4 @@ require 'lspconfig'.lua_ls.setup {
 -- }
 
 --Format async on Save
--- require("lsp-format").setup()
+--require("lsp-format").setup()

@@ -69,7 +69,10 @@ require('mini.surround').setup({
 })
 --require('mini.operators').setup({})
 
-require('mini.ai').setup({})
+require('mini.ai').setup({
+  -- Number of lines within which textobject is searched
+  n_lines = 200,
+})
 require('mini.bufremove').setup({})
 require('mini.bracketed').setup({})
 require('mini.clue').setup({

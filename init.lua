@@ -120,6 +120,7 @@ local plugins = {
 
   {
     'nvim-lualine/lualine.nvim',
+    enabled = false,
     opts = {
       icons_enabled = false,
       theme = 'auto',
@@ -146,6 +147,7 @@ local plugins = {
 
   {
     'nanozuki/tabby.nvim',
+    enabled = false,
     config = function()
       -- configs...
       local theme = {
@@ -161,7 +163,7 @@ local plugins = {
         line = function(line)
           return {
             {
-              { '  ', hl = theme.head },
+              { ' knix', hl = theme.head },
               line.sep('', theme.head, theme.fill),
             },
             line.tabs().foreach(function(tab)
@@ -324,7 +326,10 @@ local plugins = {
         callback = function(args)
           local client = vim.lsp.get_client_by_id(args.data.client_id)
           if not client then return end
-          if client.supports_method('textDocument/formatting') then
+          -- print(client.name)
+          local supports_format = client.supports_method('textDocument/formatting')
+          -- print(vim.inspect(supports_format))
+          if supports_format then
             vim.api.nvim_create_autocmd('BufWritePre', {
               buffer = args.buf,
               callback = function()
@@ -356,51 +361,11 @@ local plugins = {
       }
     }
   },
-  {
-    'stevearc/overseer.nvim',
-    event = "VeryLazy",
-    keys = {
-      { "<leader>tr", "<cmd>OverseerRunCmd<cr>",      desc = "[T]ask [R]un" },
-      { "<leader>2",  "<cmd>OverseerToggle<cr>",      desc = "[T]oggle [t]asks" },
-      { "<leader>tt", "<cmd>OverseerToggle<cr>",      desc = "[T]oggle [t]asks" },
-      { "<leader>ta", "<cmd>OverseerQuickAction<cr>", desc = "[T]ask [a]ction" },
-      { "<leader>t.", "<cmd>OverseerRestartLast<cr>", desc = "[T]ask repeat" },
-    },
-    config = function()
-      local overseer = require("overseer")
-      overseer.setup({
-        task_list = {
-          direction = "left",
-          bindings = {
-            ["r"] = "<CMD>OverseerQuickAction restart<CR>",
-            ["<leader>tt"] = "<cmd>OverseerToggle<cr>",
-          },
-        },
-        component_aliases = {
-          default = {
-            { "display_duration", detail_level = 2 },
-            "on_output_summarize",
-            "on_exit_set_status",
-            "on_complete_notify",
-          }
-        }
-      })
-      overseer.load_task_bundle('k1', { autostart = false })
-      vim.api.nvim_create_user_command("OverseerRestartLast", function()
-        local overseer = require("overseer")
-        local tasks = overseer.list_tasks({ recent_first = true })
-        if vim.tbl_isempty(tasks) then
-          vim.notify("No tasks found", vim.log.levels.INFO)
-        else
-          overseer.run_action(tasks[1], "restart")
-        end
-      end, {})
-    end
-  },
 
   {
     'saghen/blink.cmp',
     lazy = false,
+    enabled = false,
     -- dependencies = 'rafamadriz/friendly-snippets',
 
     -- use a release tag to download pre-built binaries
@@ -440,9 +405,17 @@ local plugins = {
             score_offset = 100,
           },
         },
-        cmdline = {}
       },
-
+      cmdline = {
+        sources = function()
+          --local type = vim.fn.getcmdtype()
+          ---- Search forward and backward
+          --if type == '/' or type == '?' then return { 'buffer' } end
+          ---- Commands
+          --if type == ':' or type == '@' then return { 'cmdline' } end
+          return { 'cmdline' }
+        end,
+      },
       signature = { enabled = true }
     }
   },

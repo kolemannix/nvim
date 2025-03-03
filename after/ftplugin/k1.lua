@@ -1,4 +1,5 @@
-vim.opt.grepprg = "rg --type-add 'k2:*.k1' --vimgrep"
+vim.opt.grepprg = "rg --type-add 'k1:*.k1' --vimgrep"
+vim.opt.commentstring="// %s"
 
 local stdlib_dir = "/Users/knix/dev/k1/stdlib"
 local lsp_binary = "/Users/knix/dev/k1/target/debug/lsp"
@@ -10,7 +11,7 @@ local lsp_binary = "/Users/knix/dev/k1/target/debug/lsp"
 function Start_K1(reuse)
   -- vim.cmd [[ colorscheme carbonfox  ]]
   local opts = nil
-  if reuse then
+  if not reuse then
     opts = {
       reuse_client = function(client, config)
         return false
@@ -26,14 +27,14 @@ function Start_K1(reuse)
   }, opts)
 end
 
-Start_K1()
+Start_K1(true)
 
 local function named_opts(desc)
   return { noremap = true, silent = true, desc = desc }
 end
 
 vim.api.nvim_create_user_command("K1reload", function(args)
-  local c = vim.system({ './build_lsp.sh' }):wait()
+  local c = vim.system({ '/Users/knix/dev/k1/build_lsp.sh' }):wait()
   if c.code ~= 0 then
     vim.cmd.echomsg('Failed')
     return

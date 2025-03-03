@@ -32,17 +32,17 @@ local plugins = {
     --   require('nord').set()
     -- end,
   },
-  {
-    "neanias/everforest-nvim",
-    lazy = false,
-    version = false,
-    config = function()
-      require("everforest").setup {
-        background = "hard",
-        disable_italic_comments = true,
-      }
-    end
-  },
+  -- {
+  --   "neanias/everforest-nvim",
+  --   lazy = false,
+  --   version = false,
+  --   config = function()
+  --     require("everforest").setup {
+  --       background = "hard",
+  --       disable_italic_comments = true,
+  --     }
+  --   end
+  -- },
   -- { "pgdouyon/vim-yin-yang",   lazy = true },
   -- { 'rebelot/kanagawa.nvim',   lazy = true },
   {
@@ -146,6 +146,7 @@ local plugins = {
 
   {
     'nanozuki/tabby.nvim',
+    enabled = false,
     config = function()
       -- configs...
       local theme = {
@@ -424,8 +425,12 @@ local plugins = {
         nerd_font_variant = 'mono'
       },
       completion = {
+        trigger = {
+          show_on_keyword = false,
+          show_on_trigger_character = false,
+        },
         accept = { auto_brackets = { enabled = true } },
-        ghost_text = { enabled = true },
+        ghost_text = { enabled = false },
         menu = {
           auto_show = true,
         },
@@ -440,10 +445,14 @@ local plugins = {
             score_offset = 100,
           },
         },
-        cmdline = {}
       },
 
-      signature = { enabled = true }
+      signature = {
+        enabled = true,
+        trigger = {
+          show_on_insert = true
+        }
+      }
     }
   },
   { 'scalameta/nvim-metals', dependencies = { 'nvim-lua/plenary.nvim' }, lazy = true },

@@ -31,7 +31,7 @@
 --     --dark = "dragon"
 --   }
 -- }
-vim.cmd [[ colorscheme everforest ]]
+--vim.cmd [[ colorscheme nightfox ]]
 
 -- require('onedark').setup {
 --   style = 'darker'

@@ -44,19 +44,19 @@ local plugins = {
   --   end
   -- },
   -- { "pgdouyon/vim-yin-yang",   lazy = true },
-  -- { 'rebelot/kanagawa.nvim',   lazy = true },
-  {
-    "EdenEast/nightfox.nvim",
-    opts = {
-      palettes = {
-
-      }
-
-    },
-    config = function()
-      vim.cmd("colorscheme nightfox")
-    end
-  },
+  { 'rebelot/kanagawa.nvim',  lazy = false },
+  -- {
+  --   "EdenEast/nightfox.nvim",
+  --   opts = {
+  --     palettes = {
+  --
+  --     }
+  --
+  --   },
+  --   config = function()
+  --     vim.cmd("colorscheme nightfox")
+  --   end
+  -- },
   {
     "folke/lazydev.nvim",
     ft = "lua", -- only load on lua files
@@ -134,7 +134,7 @@ local plugins = {
     opts = {},
   },
 
-  { 'mg979/vim-visual-multi',                     branch = 'master', lazy = false },
+  { 'mg979/vim-visual-multi', branch = 'master', lazy = false },
 
   {
     'windwp/nvim-autopairs',
@@ -455,7 +455,7 @@ local plugins = {
       }
     }
   },
-  { 'scalameta/nvim-metals', dependencies = { 'nvim-lua/plenary.nvim' }, lazy = true },
+  { 'scalameta/nvim-metals',                      dependencies = { 'nvim-lua/plenary.nvim' }, lazy = true },
 
   {
     'zbirenbaum/copilot.lua',

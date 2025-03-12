@@ -22,16 +22,16 @@
 -- })
 -- vim.cmd [[ colorscheme catppuccin ]]
 
--- require('kanagawa').setup {
---   keywordStyle = { italic = false },
---   commentStyle = { italic = false },
---   statementStyle = { bold = true },
---   transparent = false,
---   background = {
---     --dark = "dragon"
---   }
--- }
---vim.cmd [[ colorscheme nightfox ]]
+require('kanagawa').setup {
+  keywordStyle = { italic = false },
+  commentStyle = { italic = false },
+  statementStyle = { bold = true },
+  transparent = false,
+  background = {
+    dark = "dragon"
+  }
+}
+vim.cmd [[ colorscheme kanagawa-dragon ]]
 
 -- require('onedark').setup {
 --   style = 'darker'

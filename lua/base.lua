@@ -15,7 +15,7 @@ vim.scriptencoding = 'utf-8'
 vim.opt.encoding = 'utf-8'
 vim.opt.fileencoding = 'utf-8'
 
-vim.opt.showtabline = 2
+vim.opt.showtabline = 0
 vim.opt.sessionoptions = 'curdir,folds,globals,help,tabpages,terminal,winsize'
 
 vim.opt.completeopt = menu, menuone, noselect

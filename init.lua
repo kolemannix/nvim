@@ -122,7 +122,7 @@ local plugins = {
     'nvim-lualine/lualine.nvim',
     opts = {
       icons_enabled = false,
-      theme = 'auto',
+      theme = 'kanagawa-dragon',
       sections = {
         lualine_x = { 'encoding' },
       }

@@ -5,6 +5,7 @@ local ts_open_with_trouble = require("trouble.sources.telescope").open
 -- Use this to add more results without clearing the trouble list
 --local ts_add_to_trouble = require("trouble.sources.telescope").add
 
+local lga_actions = require("telescope-live-grep-args.actions")
 require('telescope').setup {
   theme = "ivy",
   pickers = {
@@ -33,19 +34,29 @@ require('telescope').setup {
   },
   extensions = {
     fzf = {},
-    file_browser = {
-      hijack_netrw = false,
-      -- mappings = {
-      --   ["i"] = {
-      --     -- remap to going to home directory
-      --     ["<C-CR>"] = filebrowser_actions.create_from_prompt
-      --   },
-      -- }
+    extensions = {
+      live_grep_args = {
+        auto_quoting = true, -- enable/disable auto-quoting
+        -- define mappings, e.g.
+        mappings = {         -- extend mappings
+          i = {
+            ["<C-k>"] = lga_actions.quote_prompt(),
+            ["<C-i>"] = lga_actions.quote_prompt({ postfix = " --iglob " }),
+            -- freeze the current list and start a fuzzy search in the frozen list
+            ["<C-space>"] = lga_actions.to_fuzzy_refine,
+          },
+        },
+        -- ... also accepts theme settings, for example:
+        theme = "ivy", -- use ivy theme
+        -- theme = { }, -- use own theme spec
+        -- layout_config = { mirror=true }, -- mirror preview pane
+      }
     }
   }
 }
 
 require('telescope').load_extension('fzf')
+require('telescope').load_extension("live_grep_args")
 
 require('gitsigns').setup()
 
@@ -145,8 +156,6 @@ for type, icon in pairs(signs) do
   vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
 end
 
-require('telescope').load_extension("file_browser")
-
 function named_opts(desc)
   return { noremap = true, silent = true, desc = desc }
 end
@@ -236,24 +245,26 @@ vim.keymap.set('n', '<leader>nv', '<cmd>Telekasten paste_img_and_link<cr>')
 vim.keymap.set('n', '<leader>nx', '<cmd>Telekasten toggle_todo<cr>')
 
 vim.keymap.set('n', '<leader>M', require('telescope').extensions.metals.commands, named_opts('Metals command picker'))
-vim.keymap.set('n', '<leader>F', function()
-  local opts = require('telescope.themes').get_ivy {
-    previewer = true,
-    hidden = true,
-    no_ignore = true
-  }
-  require('telescope.builtin').find_files(opts)
-end, named_opts('[F]ile browser at buffer dir'))
 vim.keymap.set('n', '<leader>f', function()
   local opts = require('telescope.themes').get_ivy {
     previewer = false,
   }
   require('telescope.builtin').find_files(opts)
 end, named_opts('[F]ind [f]ile'))
-vim.keymap.set('n', '<leader>/', require('telescope.builtin').live_grep, named_opts('Grep Workspace'))
-vim.keymap.set('n', '<leader>*', require('telescope.builtin').grep_string, named_opts('Search Workspace undercursor'))
 
-vim.keymap.set('n', '<leader>/', require('telescope.builtin').live_grep, named_opts('Search Workspace'))
+vim.keymap.set('n', '<leader>/', function()
+  local opts = require('telescope.themes').get_ivy {
+    previewer = true,
+  }
+  require('telescope').extensions.live_grep_args.live_grep_args(opts)
+end, named_opts('Grep Workspace'))
+
+vim.keymap.set('v', '<leader>*', function()
+  local opts = require('telescope.themes').get_ivy {
+    previewer = true,
+  }
+  require("telescope-live-grep-args.shortcuts").grep_visual_selection(opts)
+end, named_opts('Grep visual selection'))
 
 vim.keymap.set('n', '<bs>', "<C-o>", named_opts('Go back'))
 
@@ -262,7 +273,9 @@ vim.keymap.set('n', '<leader>sg', '<cmd>Gitsigns preview_hunk_inline<cr>', named
 vim.keymap.set('n', '<leader>sb', '<Cmd>Gitsigns toggle_current_line_blame<CR>', named_opts('Blame'))
 vim.keymap.set('n', '<leader>sl', vim.diagnostic.open_float, named_opts('Line diagnostics'))
 
-vim.keymap.set('n', '<leader><tab>', require('telescope.builtin').buffers, named_opts('Open buffer picker'))
+vim.keymap.set('n', '<leader><tab>',
+  function() require('telescope.builtin').buffers({ sort_mru = true }) end,
+  named_opts('Open buffer picker'))
 
 -- d for debug
 -- vim.keymap.set('n', '<leader>Dc', dap.continue, named_opts('Go (continue)'))

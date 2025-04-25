@@ -104,6 +104,52 @@ local plugins = {
       { "<c-_>",      function() Snacks.terminal() end,           desc = "which_key_ignore" },
     }
   },
+  {
+    "ej-shafran/compile-mode.nvim",
+    version = "^5.0.0",
+    -- you can just use the latest version:
+    -- branch = "latest",
+    -- or the most up-to-date updates:
+    -- branch = "nightly",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      -- if you want to enable coloring of ANSI escape codes in
+      -- compilation output, add:
+      -- { "m00qek/baleia.nvim", tag = "v1.3.0" },
+    },
+    config = function()
+      ---@type CompileModeOpts
+      vim.g.compile_mode = {
+        -- to add ANSI escape code support, add:
+        -- baleia_setup = true,
+
+        recompile_no_fail = true,
+        -- to make `:Compile` replace special characters (e.g. `%`) in
+        -- the command (and behave more like `:!`), add:
+        bang_expansion = true,
+        default_command = "",
+
+        environment = {
+          RUST_BACKTRACE = "1"
+        },
+      }
+
+
+      vim.keymap.set('n', '<leader>c', '<cmd>Recompile<cr>')
+      vim.keymap.set('n', '<leader>C', '<cmd>Compile<cr>')
+
+      -- Setup autocmd for event 'CompilationFinished'
+      vim.api.nvim_create_autocmd('User', {
+        pattern = { "CompilationFinished " },
+        callback = function()
+          -- do something when compilation is finished
+          -- e.g. print a message
+          vim.cmd [[ QuickfixErrors ]]
+          --print("Compilation finished!")
+        end
+      })
+    end
+  },
 
   {
     'mikesmithgh/kitty-scrollback.nvim',
@@ -145,61 +191,6 @@ local plugins = {
   },
 
   {
-    'nanozuki/tabby.nvim',
-    enabled = false,
-    config = function()
-      -- configs...
-      local theme = {
-        fill = 'TabLineFill',
-        -- Also you can do this: fill = { fg='#f2e9de', bg='#907aa9', style='italic' }
-        head = 'TabLine',
-        current_tab = 'TabLineSel',
-        tab = 'TabLine',
-        win = 'TabLine',
-        tail = 'TabLine',
-      }
-      require('tabby').setup({
-        line = function(line)
-          return {
-            {
-              { '  ', hl = theme.head },
-              line.sep('', theme.head, theme.fill),
-            },
-            line.tabs().foreach(function(tab)
-              local hl = tab.is_current() and theme.current_tab or theme.tab
-              return {
-                line.sep('', hl, theme.fill),
-                tab.in_jump_mode() and tab.jump_key() or tab.number(),
-                tab.name(),
-                line.sep('', hl, theme.fill),
-                hl = hl,
-                margin = ' ',
-              }
-            end),
-            line.spacer(),
-            line.wins_in_tab(line.api.get_current_tab()).foreach(function(win)
-              return {
-                line.sep('', theme.win, theme.fill),
-                win.is_current() and '' or '',
-                win.buf_name(),
-                line.sep('', theme.win, theme.fill),
-                hl = theme.win,
-                margin = ' ',
-              }
-            end),
-            {
-              line.sep('', theme.tail, theme.fill),
-              { '   ', hl = theme.tail },
-            },
-            hl = theme.fill,
-          }
-        end,
-        -- option = {}, -- setup modules' option,
-      })
-    end,
-  },
-
-  {
     'Shatur/neovim-session-manager',
     lazy = false,
     config = function()
@@ -216,68 +207,14 @@ local plugins = {
     version = "0.1.8",
     dependencies = {
       'nvim-lua/plenary.nvim',
-      { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' }
+      { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
+      {
+        "nvim-telescope/telescope-live-grep-args.nvim",
+        -- This will not install any breaking changes.
+        -- For major updates, this must be adjusted manually.
+        version = "^1.0.0",
+      },
     }
-  },
-  { "nvim-telescope/telescope-file-browser.nvim", lazy = true },
-
-  {
-    'nvim-treesitter/nvim-treesitter',
-    build = ':TSUpdate',
-    enabled = false,
-    lazy = true,
-    dependencies = {
-      'nvim-treesitter/nvim-treesitter-textobjects',
-      'nvim-treesitter/nvim-treesitter-context',
-    },
-    config = function()
-      require('nvim-treesitter.configs').setup {
-        -- Add languages to be installed here that you want installed for treesitter
-        ensure_installed = { 'c', 'cpp', 'lua', 'python', 'rust', 'typescript', 'sql', 'scala', 'zig', 'vim', 'vimdoc' },
-
-        highlight = { enable = true },
-        indent = { enable = true },
-        incremental_selection = {
-          enable = true,
-          keymaps = {
-            init_selection = '<c-=>',
-            node_incremental = '<c-=>',
-            scope_incremental = '<c-s>',
-            node_decremental = '<c-->',
-          },
-        },
-        textobjects = {
-          select = {
-            enable = true,
-            lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
-            keymaps = {
-              -- You can use the capture groups defined in textobjects.scm
-              -- For now i prefer the text based ones since Scala treesitter is broken
-              -- ['aa'] = '@parameter.outer',
-              -- ['ia'] = '@parameter.inner',
-              ['af'] = '@function.outer',
-              ['if'] = '@function.inner',
-              ['ac'] = '@class.outer',
-              ['ic'] = '@class.inner',
-            },
-          },
-        },
-      }
-
-      require('treesitter-context').setup {
-        enable = true,            -- Enable this plugin (Can be enabled/disabled later via commands)
-        max_lines = 3,            -- How many lines the window should span. Values <= 0 mean no limit.
-        min_window_height = 0,    -- Minimum editor window height to enable context. Values <= 0 mean no limit.
-        line_numbers = true,
-        multiline_threshold = 20, -- Maximum number of lines to collapse for a single context line
-        trim_scope = 'outer',     -- Which context lines to discard if `max_lines` is exceeded. Choices: 'inner', 'outer'
-        mode = 'topline',         -- Line used to calculate context. Choices: 'cursor', 'topline'
-        -- Separator between context and content. Should be a single character string, like '-'.
-        -- When separator is set, the context will only show up when there are at least 2 lines above cursorline.
-        separator = nil,
-        zindex = 20, -- The Z-index of the context window
-      }
-    end
   },
 
   'lewis6991/gitsigns.nvim',
@@ -357,47 +294,6 @@ local plugins = {
       }
     }
   },
-  {
-    'stevearc/overseer.nvim',
-    event = "VeryLazy",
-    keys = {
-      { "<leader>tr", "<cmd>OverseerRunCmd<cr>",      desc = "[T]ask [R]un" },
-      { "<leader>2",  "<cmd>OverseerToggle<cr>",      desc = "[T]oggle [t]asks" },
-      { "<leader>tt", "<cmd>OverseerToggle<cr>",      desc = "[T]oggle [t]asks" },
-      { "<leader>ta", "<cmd>OverseerQuickAction<cr>", desc = "[T]ask [a]ction" },
-      { "<leader>t.", "<cmd>OverseerRestartLast<cr>", desc = "[T]ask repeat" },
-    },
-    config = function()
-      local overseer = require("overseer")
-      overseer.setup({
-        task_list = {
-          direction = "left",
-          bindings = {
-            ["r"] = "<CMD>OverseerQuickAction restart<CR>",
-            ["<leader>tt"] = "<cmd>OverseerToggle<cr>",
-          },
-        },
-        component_aliases = {
-          default = {
-            { "display_duration", detail_level = 2 },
-            "on_output_summarize",
-            "on_exit_set_status",
-            "on_complete_notify",
-          }
-        }
-      })
-      overseer.load_task_bundle('k1', { autostart = false })
-      vim.api.nvim_create_user_command("OverseerRestartLast", function()
-        local overseer = require("overseer")
-        local tasks = overseer.list_tasks({ recent_first = true })
-        if vim.tbl_isempty(tasks) then
-          vim.notify("No tasks found", vim.log.levels.INFO)
-        else
-          overseer.run_action(tasks[1], "restart")
-        end
-      end, {})
-    end
-  },
 
   {
     'saghen/blink.cmp',
@@ -455,7 +351,7 @@ local plugins = {
       }
     }
   },
-  { 'scalameta/nvim-metals',                      dependencies = { 'nvim-lua/plenary.nvim' }, lazy = true },
+  { 'scalameta/nvim-metals', dependencies = { 'nvim-lua/plenary.nvim' }, lazy = true },
 
   {
     'zbirenbaum/copilot.lua',

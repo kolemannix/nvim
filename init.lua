@@ -44,7 +44,7 @@ local plugins = {
   --   end
   -- },
   -- { "pgdouyon/vim-yin-yang",   lazy = true },
-  { 'rebelot/kanagawa.nvim',  lazy = false },
+  { 'rebelot/kanagawa.nvim', lazy = false },
   -- {
   --   "EdenEast/nightfox.nvim",
   --   opts = {
@@ -106,9 +106,9 @@ local plugins = {
   },
   {
     "ej-shafran/compile-mode.nvim",
-    version = "^5.0.0",
+    -- version = "^5.0.0",
     -- you can just use the latest version:
-    -- branch = "latest",
+    branch = "latest",
     -- or the most up-to-date updates:
     -- branch = "nightly",
     dependencies = {
@@ -179,8 +179,6 @@ local plugins = {
     'stevearc/dressing.nvim',
     opts = {},
   },
-
-  { 'mg979/vim-visual-multi', branch = 'master', lazy = false },
 
   {
     'windwp/nvim-autopairs',

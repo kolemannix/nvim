@@ -151,10 +151,16 @@ local signs = {
   Hint = "H",
   Info = "I"
 }
-for type, icon in pairs(signs) do
-  local hl = "DiagnosticSign" .. type
-  vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
-end
+--for type, icon in pairs(signs) do
+--  local hl = "DiagnosticSign" .. type
+--  vim.diagnostic.config({
+--    signs = {
+--
+--    }
+--  }
+--  )
+--  --vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
+--end
 
 function named_opts(desc)
   return { noremap = true, silent = true, desc = desc }

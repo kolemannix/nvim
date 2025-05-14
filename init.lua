@@ -44,7 +44,22 @@ local plugins = {
   --   end
   -- },
   -- { "pgdouyon/vim-yin-yang",   lazy = true },
-  { 'rebelot/kanagawa.nvim', lazy = false },
+  { 'rebelot/kanagawa.nvim',
+    enabled = false, 
+    lazy = false,
+    config = function()
+      require('kanagawa').setup {
+        keywordStyle = { italic = false },
+        commentStyle = { italic = false },
+        statementStyle = { bold = true },
+        transparent = false,
+        background = {
+          dark = "dragon"
+        }
+      }
+      -- vim.cmd [[ colorscheme kanagawa-dragon ]]
+    end
+  },
   -- {
   --   "EdenEast/nightfox.nvim",
   --   opts = {
@@ -55,8 +70,21 @@ local plugins = {
   --   },
   --   config = function()
   --     vim.cmd("colorscheme nightfox")
+  --
   --   end
   -- },
+  {
+    "webhooked/kanso.nvim",
+    lazy = false,
+    priority = 1000,
+    config = function()
+      require("kanso").setup {
+        disableItalics = true,
+        keywordStyle = { bold = true }
+      }
+      vim.cmd("colorscheme kanso")
+    end
+  },
   {
     "folke/lazydev.nvim",
     ft = "lua", -- only load on lua files
@@ -202,7 +230,7 @@ local plugins = {
 
   {
     "nvim-telescope/telescope.nvim",
-    version = "0.1.8",
+    -- version = "0.1.8",
     dependencies = {
       'nvim-lua/plenary.nvim',
       { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },

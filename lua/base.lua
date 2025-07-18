@@ -3,9 +3,9 @@ vim.cmd('autocmd!')
 vim.g.mapleader = ' '
 
 vim.keymap.set({ 'n', 'x' }, 's', '<Nop>')
+vim.keymap.set("n", "`", "<nop>")
 vim.keymap.set("n", "R", "<nop>")
 
--- I can't help it I'm a clipboard man
 vim.cmd [[ set clipboard+=unnamedplus ]]
 
 vim.g.loaded_netrw = 1
@@ -19,6 +19,7 @@ vim.opt.showtabline = 0
 vim.opt.sessionoptions = 'curdir,folds,globals,help,tabpages,terminal,winsize'
 
 vim.opt.completeopt = menu, menuone, noselect
+
 
 vim.wo.number = true
 
@@ -54,6 +55,7 @@ vim.opt.relativenumber = false
 vim.opt.termguicolors = true
 vim.opt.showmode = false
 vim.opt.cursorline = true
+vim.opt.cmdwinheight = 15
 
 vim.opt.timeoutlen = 100
 vim.opt.updatetime = 50

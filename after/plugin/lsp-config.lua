@@ -22,7 +22,7 @@ on_attach = function(client, bufnr)
   vim.keymap.set('n', 'g.', vim.lsp.buf.code_action, named_opts('[G]oto Edits (.)'))
   vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, named_opts('[G]o [I]mplementation'))
   vim.keymap.set('n', 'gd', vim.lsp.buf.declaration, named_opts('[G]o [I]mplementation'))
-  vim.keymap.set('n', 'gr', require('telescope.builtin').lsp_references, named_opts('[G]o [R]eference'))
+  vim.keymap.set('n', 'gr', vim.lsp.buf.references, named_opts('[G]o [R]eference'))
   vim.keymap.set("n", "]d", vim.diagnostic.goto_next, named_opts("Next [D]iagnostic"))
   vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, named_opts("Prev [D]iagnostic"))
   vim.keymap.set("n", "[e", function() vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.ERROR }) end,
@@ -33,35 +33,15 @@ on_attach = function(client, bufnr)
   vim.keymap.set('n', '<cr>', vim.lsp.buf.definition, named_opts('Go to definition'))
 end
 
--- require("lsp_signature").setup({
---   bind = true, -- This is mandatory, otherwise border config won't get registered.
---   handler_opts = {
---     border = "single",
---   },
---   max_width = 120,
---   max_height = 30,
---   doc_lines = 20,
---   wrap = true,
---   -- hi_parameter = "DiagnosticHint", -- Highlight group name to use for active param
---   hint_enable = true,
---   hint_prefix = " ",
---   toggle_key = '<C-x>'
--- })
---
-
-
 require("illuminate").configure {
   delay = 0,
   filetypes_denylist = {
     'NvimTree', 'TelescopePrompt'
   },
-
 }
 --vim.cmd [[ hi! IlluminatedWordText  gui=underline]]
 --vim.cmd [[ hi! IlluminatedWordRead  gui=underline]]
 --vim.cmd [[ hi! IlluminatedWordWrite gui=underline]]
-
-vim.keymap.set('n', '<leader>th', require('illuminate').toggle)
 
 -- local capabilities = require('cmp_nvim_lsp').default_capabilities()
 local capabilities = {}

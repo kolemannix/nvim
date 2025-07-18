@@ -14,72 +14,14 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 local plugins = {
-  { 'navarasu/onedark.nvim', lazy = true },
-  { "catppuccin/nvim",       name = "catppuccin", lazy = true },
-  {
-    "shaunsingh/nord.nvim",
-    lazy = true,
-    -- config = function()
-    --   -- Example config in lua
-    --   vim.g.nord_contrast = true
-    --   vim.g.nord_borders = false
-    --   vim.g.nord_disable_background = false
-    --   vim.g.nord_italic = false
-    --   -- vim.g.nord_uniform_diff_background = true
-    --   vim.g.nord_bold = true
-    --
-    --   -- Load the colorscheme
-    --   require('nord').set()
-    -- end,
-  },
-  -- {
-  --   "neanias/everforest-nvim",
-  --   lazy = false,
-  --   version = false,
-  --   config = function()
-  --     require("everforest").setup {
-  --       background = "hard",
-  --       disable_italic_comments = true,
-  --     }
-  --   end
-  -- },
-  -- { "pgdouyon/vim-yin-yang",   lazy = true },
-  { 'rebelot/kanagawa.nvim',
-    enabled = false, 
-    lazy = false,
-    config = function()
-      require('kanagawa').setup {
-        keywordStyle = { italic = false },
-        commentStyle = { italic = false },
-        statementStyle = { bold = true },
-        transparent = false,
-        background = {
-          dark = "dragon"
-        }
-      }
-      -- vim.cmd [[ colorscheme kanagawa-dragon ]]
-    end
-  },
-  -- {
-  --   "EdenEast/nightfox.nvim",
-  --   opts = {
-  --     palettes = {
-  --
-  --     }
-  --
-  --   },
-  --   config = function()
-  --     vim.cmd("colorscheme nightfox")
-  --
-  --   end
-  -- },
   {
     "webhooked/kanso.nvim",
     lazy = false,
     priority = 1000,
     config = function()
       require("kanso").setup {
-        disableItalics = true,
+        bold = true,
+        italics = false,
         keywordStyle = { bold = true }
       }
       vim.cmd("colorscheme kanso")
@@ -133,7 +75,9 @@ local plugins = {
     }
   },
   {
+    -- This plugin is amazing but just too slow
     "ej-shafran/compile-mode.nvim",
+    enabled = false,
     -- version = "^5.0.0",
     -- you can just use the latest version:
     branch = "latest",
@@ -194,6 +138,7 @@ local plugins = {
 
   {
     'nvim-lualine/lualine.nvim',
+    enabled = false,
     opts = {
       icons_enabled = false,
       theme = 'kanagawa-dragon',
@@ -201,11 +146,6 @@ local plugins = {
         lualine_x = { 'encoding' },
       }
     }
-  },
-
-  {
-    'stevearc/dressing.nvim',
-    opts = {},
   },
 
   {
@@ -327,7 +267,7 @@ local plugins = {
     -- dependencies = 'rafamadriz/friendly-snippets',
 
     -- use a release tag to download pre-built binaries
-    version = 'v0.*',
+    version = '1.*',
     -- OR build from source, requires nightly: https://rust-lang.github.io/rustup/concepts/channels.html#working-with-nightly-rust
     -- build = 'cargo build --release',
 
@@ -354,7 +294,7 @@ local plugins = {
         accept = { auto_brackets = { enabled = true } },
         ghost_text = { enabled = false },
         menu = {
-          auto_show = true,
+          auto_show = false,
         },
       },
       sources = {
@@ -422,8 +362,54 @@ local plugins = {
       -- { "r",     mode = "o",               function() require("flash").remote() end,            desc = "Remote Flash" },
       -- { "R",     mode = { "o", "x" },      function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
     },
-  }
-
+  },
+  { "ntpeters/vim-better-whitespace", lazy = false },
+  { 'navarasu/onedark.nvim', lazy = true },
+  { "catppuccin/nvim",       name = "catppuccin", lazy = true },
+  {
+    "shaunsingh/nord.nvim",
+    lazy = true,
+    -- config = function()
+    --   -- Example config in lua
+    --   vim.g.nord_contrast = true
+    --   vim.g.nord_borders = false
+    --   vim.g.nord_disable_background = false
+    --   vim.g.nord_italic = false
+    --   -- vim.g.nord_uniform_diff_background = true
+    --   vim.g.nord_bold = true
+    --
+    --   -- Load the colorscheme
+    --   require('nord').set()
+    -- end,
+  },
+  -- {
+  --   "neanias/everforest-nvim",
+  --   lazy = false,
+  --   version = false,
+  --   config = function()
+  --     require("everforest").setup {
+  --       background = "hard",
+  --       disable_italic_comments = true,
+  --     }
+  --   end
+  -- },
+  -- { "pgdouyon/vim-yin-yang",   lazy = true },
+  { 'rebelot/kanagawa.nvim',
+    enabled = false,
+    lazy = false,
+    config = function()
+      require('kanagawa').setup {
+        keywordStyle = { italic = false },
+        commentStyle = { italic = false },
+        statementStyle = { bold = true },
+        transparent = false,
+        background = {
+          dark = "dragon"
+        }
+      }
+      -- vim.cmd [[ colorscheme kanagawa-dragon ]]
+    end
+  },
 }
 
 require("lazy").setup(plugins, opts)

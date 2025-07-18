@@ -2,8 +2,6 @@
 
 --local ts_actions = require("telescope.actions")
 local ts_open_with_trouble = require("trouble.sources.telescope").open
--- Use this to add more results without clearing the trouble list
---local ts_add_to_trouble = require("trouble.sources.telescope").add
 
 local lga_actions = require("telescope-live-grep-args.actions")
 require('telescope').setup {
@@ -140,56 +138,11 @@ require('mini.clue').setup({
   },
 })
 
---require('mini.files').setup {
---
---}
-
--- Gutter Symbols
-local signs = {
-  Error = "E",
-  Warn = "W",
-  Hint = "H",
-  Info = "I"
-}
-for type, icon in pairs(signs) do
-  local hl = "DiagnosticSign" .. type
-  vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
-end
-
 function named_opts(desc)
   return { noremap = true, silent = true, desc = desc }
 end
 
 local opts = { noremap = true, silent = true }
-
--- Colemak essentials
--- vim.keymap.set('n', 'n', 'j')
--- vim.keymap.set('v', 'n', 'j')
--- vim.keymap.set('n', 'e', 'k')
--- vim.keymap.set('v', 'e', 'k')
--- vim.keymap.set('n', 'i', 'l')
--- vim.keymap.set('v', 'i', 'l')
-local colemak_mode = false
-local function colemak_toggle()
-  if colemak_mode then
-    vim.keymap.set('n', 'n', 'n')
-    vim.keymap.set('v', 'n', 'n')
-    vim.keymap.set('n', 'e', 'e')
-    vim.keymap.set('v', 'e', 'e')
-    vim.keymap.set('n', 'i', 'i')
-    vim.keymap.set('v', 'i', 'i')
-    colemak_mode = false
-  else
-    vim.keymap.set('n', 'n', 'j')
-    vim.keymap.set('v', 'n', 'j')
-    vim.keymap.set('n', 'e', 'k')
-    vim.keymap.set('v', 'e', 'k')
-    vim.keymap.set('n', 'i', 'l')
-    vim.keymap.set('v', 'i', 'l')
-    colemak_mode = true
-  end
-  print('Toggled Colemak to ' .. tostring(colemak_mode))
-end
 
 -- Navigate a bit in insert mode
 vim.keymap.set('i', '<C-h>', '<left>')
@@ -202,6 +155,11 @@ vim.keymap.set('n', '<C-j>', '<down>')
 vim.keymap.set('n', '<C-k>', '<up>')
 vim.keymap.set('n', '<C-l>', '<right>')
 
+vim.keymap.set('n', '<C-h>', '<C-w>h')
+vim.keymap.set('n', '<C-j>', '<C-w>j')
+vim.keymap.set('n', '<C-k>', '<C-w>k')
+vim.keymap.set('n', '<C-l>', '<C-w>l')
+
 -- Swap lines up and down
 
 vim.keymap.set('v', '<C-j>', ":m '>+1<CR>gv=gv")
@@ -209,12 +167,10 @@ vim.keymap.set('v', '<C-k>', ":m '<-2<CR>gv=gv")
 
 vim.keymap.set('t', '<Esc>', '<C-\\><C-n>')
 
-vim.keymap.set("n", "<leader>sub", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
-vim.keymap.set("x", "<leader>ss", [[:%s/\%V\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
+vim.keymap.set("n", "<leader>sub", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gcI<Left><Left><Left>]])
+vim.keymap.set("x", "<leader>ss", [[:%s/\%V\<<C-r><C-w>\>/<C-r><C-w>/gcI<Left><Left><Left>]])
 
 vim.keymap.set('i', 'jk', '<esc>', opts)
-
-vim.keymap.set('x', '<leader>p', '"_dP', named_opts('Paste preserving register'))
 
 -- Does not play nice with mini.animate scroll, use one or the other
 -- I'm using neovide now so ditching these and using mini.animate for now!
@@ -296,23 +252,30 @@ vim.keymap.set('n', '<leader>hx', ':.lua<cr>', named_opts('e[x]ecute line lua'))
 vim.keymap.set('v', '<leader>hx', ':.lua<cr>', named_opts('e[x]ecute selection lua'))
 -- vim.keymap.set('n', '<leader>hr', '<cmd>lua <c-r>*<cr>', named_opts('Run yanked'))
 vim.keymap.set('n', '<leader>h/', function() ts_grep_from_dir('~/.config/nvim') end, named_opts('Grep config dir'))
-vim.keymap.set('n', '<leader>htc', colemak_toggle, named_opts('Toggle -> Colemak'))
 vim.keymap.set('n', '<leader>hh', require('telescope.builtin').help_tags, named_opts('Help'))
 
--- Goto
-
-vim.keymap.set('n', ']t', '<Cmd>tabn<CR>', named_opts('Next Tab'))
-vim.keymap.set('n', '[t', '<Cmd>tabp<CR>', named_opts('Previous Tab'))
+-- Toggle the quickfix window with tab
+vim.keymap.set('n', '`', function()
+  vim.cmd(vim.fn.getqflist({ winid = 0 }).winid ~= 0 and 'cclose' or 'copen')
+end, named_opts('Toggle quickfix'))
 
 -- Forward / Back
-vim.keymap.set("n", "] ", "o<esc>", named_opts("New line down"))
-vim.keymap.set("n", "[ ", "O<esc>", named_opts("New line up"))
 vim.keymap.set("n", "]g", "<cmd>Gitsigns next_hunk<cr>", named_opts("Next hunk"))
 vim.keymap.set("n", "[g", "<cmd>Gitsigns prev_hunk<cr>", named_opts("Prev hunk"))
 vim.keymap.set("n", "<leader>gz", '<cmd>Gitsigns reset_hunk<CR>')
 vim.keymap.set("n", "<leader>?", require('telescope.builtin').command_history, named_opts("Command history"))
 --
--- Tabs!
-vim.keymap.set("n", "<leader>tn", "<cmd>tabnew<cr>", named_opts("[N]ew [t]ab"))
-vim.keymap.set("n", "<leader>tx", "<cmd>tabclose<cr>", named_opts("Kill [t]ab"))
-vim.keymap.set("n", "gt", "<cmd>Tabby jump_to_tab<cr>", named_opts("[G]oto [T]ab"))
+
+vim.keymap.set("n", "<space>c", "<cmd>nos ene | setl bt=nofile bh=wipe | call feedkeys(':r !', 'n')<CR>")
+
+-- TODO: create a user command for my ultimate 'run in terminal' command
+vim.keymap.set("n", "<leader>C", function()
+  vim.ui.input({},
+    function(c)
+      if c then
+        vim.cmd("below term " .. c)
+        -- vim.bo.buftype = "nofile" vim.bo.bufhidden = "wipe" vim.bo.swapfile = false
+        -- vim.api.nvim_buf_set_lines(0, 0, -1, false, vim.fn.systemlist(c))
+      end
+    end)
+end)

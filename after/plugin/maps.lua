@@ -268,14 +268,10 @@ vim.keymap.set("n", "<leader>?", require('telescope.builtin').command_history, n
 
 vim.keymap.set("n", "<space>c", "<cmd>nos ene | setl bt=nofile bh=wipe | call feedkeys(':r !', 'n')<CR>")
 
--- TODO: create a user command for my ultimate 'run in terminal' command
-vim.keymap.set("n", "<leader>C", function()
-  vim.ui.input({},
-    function(c)
-      if c then
-        vim.cmd("below term " .. c)
-        -- vim.bo.buftype = "nofile" vim.bo.bufhidden = "wipe" vim.bo.swapfile = false
-        -- vim.api.nvim_buf_set_lines(0, 0, -1, false, vim.fn.systemlist(c))
-      end
-    end)
-end)
+-- Compile mode mappings
+local compile = require('compile-mode')
+
+vim.keymap.set("n", "<leader>C", compile.compile, named_opts("Compile mode"))
+vim.keymap.set("n", "<leader>tc", compile.recompile, named_opts("Re-run last compile"))
+vim.keymap.set("n", "<leader>tC", compile.kill_buffer, named_opts("Kill compile buffer"))
+vim.keymap.set("n", "<leader>tr", compile.reset, named_opts("Reset compile state"))

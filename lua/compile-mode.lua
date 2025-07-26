@@ -5,7 +5,6 @@ local compile_buf = nil
 local compile_win = nil
 local command_history = {}
 
--- Reset all state (useful for development/debugging)
 function P.reset()
   compile_buf = nil
   compile_win = nil
@@ -17,6 +16,16 @@ local function get_compile_buffer()
   if compile_buf and vim.api.nvim_buf_is_valid(compile_buf) then
     return compile_buf
   end
+
+  -- Find a buffer named *compile*
+  local buffers = vim.api.nvim_list_bufs()
+  for _, buf in ipairs(buffers) do
+    if vim.api.nvim_buf_is_valid(buf) and vim.api.nvim_buf_get_name(buf) == "*compile*" then
+      compile_buf = buf
+      return compile_buf
+    end
+  end
+
   compile_buf = nil
   return nil
 end
@@ -78,7 +87,7 @@ local function send_command(cmd, focus)
     end
   end
   table.insert(command_history, 1, cmd)
-  if #command_history > 20 then -- Keep last 20 commands
+  if #command_history > 20 then
     table.remove(command_history)
   end
 
@@ -86,35 +95,12 @@ local function send_command(cmd, focus)
   local chan = vim.bo[buf].channel
   if chan > 0 then
     vim.api.nvim_chan_send(chan, cmd .. "\n")
-    -- Scroll to bottom after sending command
-    vim.defer_fn(function()
-      if vim.api.nvim_buf_is_valid(buf) then
-        local line_count = vim.api.nvim_buf_line_count(buf)
-        vim.api.nvim_buf_set_mark(buf, "'", line_count, 0, {})
-        -- If terminal window is visible, scroll it
-        local term_win = find_compile_window()
-        if term_win then
-          vim.api.nvim_win_set_cursor(term_win, {line_count, 0})
-        end
-      end
-    end, 50)
   else
     -- Terminal not ready yet, try after delay
     vim.defer_fn(function()
       local chan = vim.bo[buf].channel
       if chan > 0 then
         vim.api.nvim_chan_send(chan, cmd .. "\n")
-        -- Scroll to bottom after sending command
-        vim.defer_fn(function()
-          if vim.api.nvim_buf_is_valid(buf) then
-            local line_count = vim.api.nvim_buf_line_count(buf)
-            vim.api.nvim_buf_set_mark(buf, "'", line_count, 0, {})
-            local term_win = find_compile_window()
-            if term_win then
-              vim.api.nvim_win_set_cursor(term_win, {line_count, 0})
-            end
-          end
-        end, 50)
       end
     end, 100)
   end
@@ -122,7 +108,7 @@ end
 
 -- Helper function for command input with completion
 local function prompt_for_command()
-  vim.ui.input({ 
+  vim.ui.input({
     prompt = "Command: ",
     completion = "shellcmd"
   }, function(input_cmd)
@@ -132,15 +118,18 @@ local function prompt_for_command()
   end)
 end
 
+function P.command()
+  P.compile(false)
+end
+
 -- Main compile function - run command in persistent terminal
-function P.compile(cmd)
-  if cmd and cmd ~= "" then
-    send_command(cmd, true)
+function P.compile(hist)
+  if #command_history == 0 then
+    prompt_for_command()
     return
   end
 
-  -- No command provided - show history if available, otherwise prompt
-  if #command_history == 0 then
+  if not hist then
     prompt_for_command()
     return
   end
@@ -150,11 +139,11 @@ function P.compile(cmd)
   for _, hist_cmd in ipairs(command_history) do
     table.insert(options, hist_cmd)
   end
-  
+
   vim.ui.select(options, {
     prompt = "Select command: ",
-    format_item = function(item) 
-      return item == "new..." and "→ " .. item or item 
+    format_item = function(item)
+      return item == "new..." and "→ " .. item or item
     end,
   }, function(choice)
     if choice == "new..." then
@@ -185,20 +174,37 @@ function P.close_window()
   end
 end
 
--- Kill the compile buffer entirely
-function P.kill_buffer()
-  local buf = get_compile_buffer()
-  if buf then
-    vim.api.nvim_buf_delete(buf, { force = true })
-    compile_buf = nil
-    compile_win = nil
+-- Toggle compile window visibility
+function P.toggle_window()
+  local win = find_compile_window()
+  if win then
+    -- Window is visible, close it
+    vim.api.nvim_win_close(win, false)
+  else
+    -- Window is not visible, show it
+    local buf = get_compile_buffer()
+    if buf then
+      -- Buffer exists, open it in a split
+      vim.cmd("below split")
+      compile_win = vim.api.nvim_get_current_win()
+      vim.api.nvim_win_set_buf(compile_win, buf)
+    else
+      -- No buffer exists, create new terminal
+      ensure_compile_window()
+    end
   end
 end
 
--- NOTE(compile-mode): Future enhancements could include:
--- TODO(compile-mode): Error parsing and quickfix integration
--- TODO(compile-mode): Different compile profiles/configurations
--- TODO(compile-mode): Integration with project-specific commands
+vim.api.nvim_create_user_command('C', function(opts)
+  local cmd = opts.args
+  if cmd and cmd ~= "" then
+    send_command(cmd, true)
+  else
+    P.compile(false)
+  end
+end, {
+  nargs = '*', -- Accept any number of arguments
+  desc = 'Run command in compile terminal'
+})
 
 return P
-

@@ -26,7 +26,8 @@ vim.api.nvim_create_autocmd("FileType", {
     require("metals").initialize_or_attach(metals_config)
 
     -- LSP
-    vim.keymap.set('n', '<leader>r', vim.lsp.buf.rename, named_opts('Rename'))
+    -- returning to default binding to reserve <leader>r for run
+    -- vim.keymap.set('n', '<leader>r', vim.lsp.buf.rename, named_opts('Rename'))
     vim.keymap.set('n', 'gs', require('telescope.builtin').lsp_dynamic_workspace_symbols,
       named_opts('[G]oto [S]ymbols lsp'))
     vim.keymap.set('n', '<leader>k', vim.lsp.buf.hover, named_opts('LSP Hover'))

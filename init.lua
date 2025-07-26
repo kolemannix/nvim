@@ -245,21 +245,6 @@ local plugins = {
     end
   },
   'rrethy/vim-illuminate',
-  {
-    'folke/trouble.nvim',
-    cmd = "Trouble",
-    opts = {
-      auto_preview = false
-    },
-    keys = {
-      {
-        "<leader>d",
-        "<cmd>Trouble diagnostics toggle filter.severity=vim.diagnostic.severity.ERROR focus=true<cr>",
-        desc =
-        "Buffer [D]iagnostics (Trouble)"
-      }
-    }
-  },
 
   {
     'saghen/blink.cmp',
@@ -317,7 +302,7 @@ local plugins = {
       }
     }
   },
-  { 'scalameta/nvim-metals', dependencies = { 'nvim-lua/plenary.nvim' }, lazy = true },
+  { 'scalameta/nvim-metals',          dependencies = { 'nvim-lua/plenary.nvim' }, lazy = true },
 
   {
     'zbirenbaum/copilot.lua',
@@ -364,8 +349,8 @@ local plugins = {
     },
   },
   { "ntpeters/vim-better-whitespace", lazy = false },
-  { 'navarasu/onedark.nvim', lazy = true },
-  { "catppuccin/nvim",       name = "catppuccin", lazy = true },
+  { 'navarasu/onedark.nvim',          lazy = true },
+  { "catppuccin/nvim",                name = "catppuccin",                        lazy = true },
   {
     "shaunsingh/nord.nvim",
     lazy = true,
@@ -394,7 +379,8 @@ local plugins = {
   --   end
   -- },
   -- { "pgdouyon/vim-yin-yang",   lazy = true },
-  { 'rebelot/kanagawa.nvim',
+  {
+    'rebelot/kanagawa.nvim',
     enabled = false,
     lazy = false,
     config = function()

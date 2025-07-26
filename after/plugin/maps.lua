@@ -1,8 +1,5 @@
 -- Telescope
 
---local ts_actions = require("telescope.actions")
-local ts_open_with_trouble = require("trouble.sources.telescope").open
-
 local lga_actions = require("telescope-live-grep-args.actions")
 require('telescope').setup {
   theme = "ivy",
@@ -18,10 +15,8 @@ require('telescope').setup {
   defaults = {
     mappings = {
       i = {
-        ["<c-t>"] = ts_open_with_trouble,
         ["<esc>"] = require('telescope.actions').close
       },
-      n = { ["<c-t>"] = ts_open_with_trouble },
     },
     file_ignore_patterns = { ".git/", "node_modules/" },
     layout_config = {
@@ -138,7 +133,7 @@ require('mini.clue').setup({
   },
 })
 
-function named_opts(desc)
+local function named_opts(desc)
   return { noremap = true, silent = true, desc = desc }
 end
 
@@ -165,7 +160,8 @@ vim.keymap.set('n', '<C-l>', '<C-w>l')
 vim.keymap.set('v', '<C-j>', ":m '>+1<CR>gv=gv")
 vim.keymap.set('v', '<C-k>', ":m '<-2<CR>gv=gv")
 
-vim.keymap.set('t', '<Esc>', '<C-\\><C-n>')
+-- Get out of terminal with my old tmux prefix, good times
+vim.keymap.set('t', '<C-a>', '<C-\\><C-n>')
 
 vim.keymap.set("n", "<leader>sub", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gcI<Left><Left><Left>]])
 vim.keymap.set("x", "<leader>ss", [[:%s/\%V\<<C-r><C-w>\>/<C-r><C-w>/gcI<Left><Left><Left>]])
@@ -225,8 +221,7 @@ end, named_opts('Grep visual selection'))
 vim.keymap.set('n', '<bs>', "<C-o>", named_opts('Go back'))
 
 -- <leader>s for Show
-vim.keymap.set('n', '<leader>sg', '<cmd>Gitsigns preview_hunk_inline<cr>', named_opts('Show diff'))
-vim.keymap.set('n', '<leader>sb', '<Cmd>Gitsigns toggle_current_line_blame<CR>', named_opts('Blame'))
+vim.keymap.set('n', '<leader>gd', '<cmd>Gitsigns preview_hunk_inline<cr>', named_opts('Show diff'))
 vim.keymap.set('n', '<leader>sl', vim.diagnostic.open_float, named_opts('Line diagnostics'))
 
 vim.keymap.set('n', '<leader><tab>',
@@ -271,7 +266,6 @@ vim.keymap.set("n", "<space>c", "<cmd>nos ene | setl bt=nofile bh=wipe | call fe
 -- Compile mode mappings
 local compile = require('compile-mode')
 
-vim.keymap.set("n", "<leader>C", compile.compile, named_opts("Compile mode"))
-vim.keymap.set("n", "<leader>tc", compile.recompile, named_opts("Re-run last compile"))
-vim.keymap.set("n", "<leader>tC", compile.kill_buffer, named_opts("Kill compile buffer"))
-vim.keymap.set("n", "<leader>tr", compile.reset, named_opts("Reset compile state"))
+vim.keymap.set("n", "<leader>c", compile.command, named_opts("Run a command"))
+vim.keymap.set("n", "<leader>C", compile.compile, named_opts("Run a history command"))
+vim.keymap.set("n", "<leader>r", compile.recompile, named_opts("Re-run last command"))

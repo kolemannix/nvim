@@ -14,23 +14,20 @@ on_attach = function(client, bufnr)
   end
 
   -- LSP
-  vim.keymap.set('n', '<leader>r', vim.lsp.buf.rename, named_opts('Rename'))
   vim.keymap.set('n', 'gs', require('telescope.builtin').lsp_dynamic_workspace_symbols,
     named_opts('[G]oto [S]ymbols lsp'))
-  vim.keymap.set('n', '<leader>k', vim.lsp.buf.hover, named_opts('LSP Hover'))
-  vim.keymap.set('n', 'K', vim.lsp.buf.hover, named_opts('LSP Hover'))
-  vim.keymap.set('n', 'g.', vim.lsp.buf.code_action, named_opts('[G]oto Edits (.)'))
-  vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, named_opts('[G]o [I]mplementation'))
   vim.keymap.set('n', 'gd', vim.lsp.buf.declaration, named_opts('[G]o [I]mplementation'))
-  vim.keymap.set('n', 'gr', vim.lsp.buf.references, named_opts('[G]o [R]eference'))
-  vim.keymap.set("n", "]d", vim.diagnostic.goto_next, named_opts("Next [D]iagnostic"))
-  vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, named_opts("Prev [D]iagnostic"))
   vim.keymap.set("n", "[e", function() vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.ERROR }) end,
     named_opts("Prev [E]rror"))
   vim.keymap.set("n", "]e", function() vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.ERROR }) end,
     named_opts("Next [E]rror"))
-  -- Enter and Backspace for navigation
-  vim.keymap.set('n', '<cr>', vim.lsp.buf.definition, named_opts('Go to definition'))
+  vim.keymap.set("n", "<leader>d", function()
+    -- clear qflist "Diagnostics" first
+    vim.fn.setqflist({}, 'r', { title = "Diagnostics" })
+    vim.diagnostic.setqflist()
+  end, named_opts("[D]iagnostics"))
+  vim.keymap.set("n", "<leader>D", function() vim.diagnostic.setqflist({ severity = vim.diagnostic.severity.ERROR }) end,
+    named_opts("[D]iagnostics"))
 end
 
 require("illuminate").configure {
@@ -111,6 +108,13 @@ require('lspconfig').clangd.setup {
 }
 
 require 'lspconfig'.lua_ls.setup {
+  settings = {
+    Lua = {
+      diagnostics = {
+        globals = { 'vim' }
+      }
+    }
+  },
   capabilities = capabilities,
   on_attach = on_attach,
 }

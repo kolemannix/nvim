@@ -46,7 +46,7 @@ local capabilities = {}
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
   vim.lsp.diagnostic.on_publish_diagnostics, {
     -- Enable underline, use default values
-    underline = true,
+    underline = false,
     -- Enable virtual text only on Warning or above, override spacing to 2
     virtual_text = false,
     -- virtual_text = {

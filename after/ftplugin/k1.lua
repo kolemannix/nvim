@@ -38,7 +38,7 @@ vim.api.nvim_create_user_command("K1reload", function(args)
     vim.cmd.echomsg('Failed')
     return
   end
-  local k1_clients = vim.lsp.get_clients({ name == 'k1-lsp' })
+  local k1_clients = vim.lsp.get_clients({ name = 'k1-lsp' })
   for i, client in ipairs(k1_clients) do
     -- Only detaches the current buffer, good enough for now
     vim.lsp.buf_detach_client(0, client.id)

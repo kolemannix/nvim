@@ -195,6 +195,27 @@ function P.toggle_window()
   end
 end
 
+-- Scroll to bottom of compile buffer
+function P.scroll_to_bottom()
+  local buf = get_compile_buffer()
+  if not buf then
+    -- NOTE(scroll_to_bottom): No compile buffer exists, nothing to scroll
+    return
+  end
+  
+  local win = find_compile_window()
+  if not win then
+    -- NOTE(scroll_to_bottom): Compile buffer exists but not visible, should we open it?
+    return
+  end
+  
+  -- Get the total number of lines in the buffer
+  local line_count = vim.api.nvim_buf_line_count(buf)
+  
+  -- Set cursor to the last line
+  vim.api.nvim_win_set_cursor(win, {line_count, 0})
+end
+
 vim.api.nvim_create_user_command('C', function(opts)
   local cmd = opts.args
   if cmd and cmd ~= "" then
@@ -204,6 +225,7 @@ vim.api.nvim_create_user_command('C', function(opts)
   end
 end, {
   nargs = '*', -- Accept any number of arguments
+  complete = 'shellcmd', -- Enable shell command completion
   desc = 'Run command in compile terminal'
 })
 

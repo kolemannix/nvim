@@ -133,7 +133,7 @@ require('mini.clue').setup({
   },
 })
 
-local function named_opts(desc)
+function named_opts(desc)
   return { noremap = true, silent = true, desc = desc }
 end
 
@@ -154,6 +154,7 @@ vim.keymap.set('n', '<C-h>', '<C-w>h')
 vim.keymap.set('n', '<C-j>', '<C-w>j')
 vim.keymap.set('n', '<C-k>', '<C-w>k')
 vim.keymap.set('n', '<C-l>', '<C-w>l')
+vim.keymap.set('n', '<C-q>', '<C-w>q')
 
 -- Swap lines up and down
 
@@ -267,5 +268,8 @@ vim.keymap.set("n", "<space>c", "<cmd>nos ene | setl bt=nofile bh=wipe | call fe
 local compile = require('compile-mode')
 
 vim.keymap.set("n", "<leader>c", compile.command, named_opts("Run a command"))
-vim.keymap.set("n", "<leader>C", compile.compile, named_opts("Run a history command"))
 vim.keymap.set("n", "<leader>r", compile.recompile, named_opts("Re-run last command"))
+vim.keymap.set('n', '<leader>Cb', compile.scroll_to_bottom, named_opts("Scroll compile buffer to [b]ottom"))
+vim.keymap.set('n', '<leader>Ct', compile.toggle_window, named_opts("[T]oggle compile buffer"))
+vim.keymap.set('n', '<leader>Ch', compile.compile, named_opts("[T]oggle compile buffer"))
+vim.keymap.set('n', '<leader>nc', '<cmd>grep -Tsh -Tmd nocommit<cr>', named_opts("[T]oggle compile buffer"))

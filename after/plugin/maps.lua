@@ -272,4 +272,4 @@ vim.keymap.set("n", "<leader>r", compile.recompile, named_opts("Re-run last comm
 vim.keymap.set('n', '<leader>Cb', compile.scroll_to_bottom, named_opts("Scroll compile buffer to [b]ottom"))
 vim.keymap.set('n', '<leader>Ct', compile.toggle_window, named_opts("[T]oggle compile buffer"))
 vim.keymap.set('n', '<leader>Ch', compile.compile, named_opts("[T]oggle compile buffer"))
-vim.keymap.set('n', '<leader>nc', '<cmd>grep -Tsh -Tmd nocommit<cr>', named_opts("[T]oggle compile buffer"))
+vim.keymap.set('n', '<leader>nc', '<cmd>silent grep! -Tsh -Tmd nocommit<cr>', named_opts("Review [n][c]ommits"))

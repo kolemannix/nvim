@@ -65,21 +65,19 @@ local function ensure_compile_window()
     compile_buf = vim.api.nvim_get_current_buf()
     compile_win = vim.api.nvim_get_current_win()
 
-    -- Set buffer name for easy identification
     vim.api.nvim_buf_set_name(compile_buf, "*compile*")
 
     return compile_buf, compile_win
   end
 end
 
--- Send command to the compile terminal
+-- Sends the command to the compile terminal via nvim_chan_send
 local function send_command(cmd, focus)
   local buf, win = ensure_compile_window()
 
-  -- Focus the compile window
   if focus then vim.api.nvim_set_current_win(win) end
 
-  -- Add to history (dedupe first)
+  -- Add to history
   for i, existing_cmd in ipairs(command_history) do
     if existing_cmd == cmd then
       table.remove(command_history, i)
@@ -93,16 +91,10 @@ local function send_command(cmd, focus)
 
   -- Send command to terminal
   local chan = vim.bo[buf].channel
+  local expanded_cmd = vim.fn.expand(cmd)
+
   if chan > 0 then
-    vim.api.nvim_chan_send(chan, cmd .. "\n")
-  else
-    -- Terminal not ready yet, try after delay
-    vim.defer_fn(function()
-      local chan = vim.bo[buf].channel
-      if chan > 0 then
-        vim.api.nvim_chan_send(chan, cmd .. "\n")
-      end
-    end, 100)
+    vim.api.nvim_chan_send(chan, expanded_cmd .. "\n")
   end
 end
 
@@ -202,18 +194,18 @@ function P.scroll_to_bottom()
     -- NOTE(scroll_to_bottom): No compile buffer exists, nothing to scroll
     return
   end
-  
+
   local win = find_compile_window()
   if not win then
     -- NOTE(scroll_to_bottom): Compile buffer exists but not visible, should we open it?
     return
   end
-  
+
   -- Get the total number of lines in the buffer
   local line_count = vim.api.nvim_buf_line_count(buf)
-  
+
   -- Set cursor to the last line
-  vim.api.nvim_win_set_cursor(win, {line_count, 0})
+  vim.api.nvim_win_set_cursor(win, { line_count, 0 })
 end
 
 vim.api.nvim_create_user_command('C', function(opts)
@@ -224,7 +216,7 @@ vim.api.nvim_create_user_command('C', function(opts)
     P.compile(false)
   end
 end, {
-  nargs = '*', -- Accept any number of arguments
+  nargs = '*',           -- Accept any number of arguments
   complete = 'shellcmd', -- Enable shell command completion
   desc = 'Run command in compile terminal'
 })

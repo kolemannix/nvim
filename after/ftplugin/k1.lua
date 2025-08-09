@@ -1,4 +1,4 @@
-vim.opt.grepprg = "rg --type-add 'k2:*.k1' --vimgrep"
+vim.opt.grepprg = "rg --type-add 'k1:*.k1' --vimgrep"
 
 local stdlib_dir = "/Users/knix/dev/k1/k1lib"
 local lsp_binary = "/Users/knix/dev/k1/target/debug/lsp"

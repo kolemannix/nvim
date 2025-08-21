@@ -22,6 +22,7 @@ vim.opt.completeopt = menu, menuone, noselect
 
 
 vim.wo.number = true
+vim.opt.winborder = "rounded"
 
 vim.opt.title = true
 vim.opt.autoindent = true

@@ -139,22 +139,12 @@ end
 
 local opts = { noremap = true, silent = true }
 
--- Navigate a bit in insert mode
-vim.keymap.set('i', '<C-h>', '<left>')
-vim.keymap.set('i', '<C-j>', '<down>')
-vim.keymap.set('i', '<C-k>', '<up>')
-vim.keymap.set('i', '<C-l>', '<right>')
-
-vim.keymap.set('n', '<C-h>', '<left>')
-vim.keymap.set('n', '<C-j>', '<down>')
-vim.keymap.set('n', '<C-k>', '<up>')
-vim.keymap.set('n', '<C-l>', '<right>')
-
 vim.keymap.set('n', '<C-h>', '<C-w>h')
 vim.keymap.set('n', '<C-j>', '<C-w>j')
 vim.keymap.set('n', '<C-k>', '<C-w>k')
 vim.keymap.set('n', '<C-l>', '<C-w>l')
 vim.keymap.set('n', '<C-q>', '<C-w>q')
+vim.keymap.set('n', '<tab>', '<C-^>')
 
 -- Swap lines up and down
 
@@ -263,13 +253,16 @@ vim.keymap.set("n", "<leader>?", require('telescope.builtin').command_history, n
 --
 
 vim.keymap.set("n", "<space>c", "<cmd>nos ene | setl bt=nofile bh=wipe | call feedkeys(':r !', 'n')<CR>")
+vim.keymap.set('n', 'gf', '<cmd>vsplit<cr>gF', named_opts("[G]o to [F]ile and line (in vsplit)"))
+vim.keymap.set('n', '<leader>nc', '<cmd>silent grep! -Tsh -Tmd nocommit<cr>', named_opts("Review [n][c]ommits"))
 
 -- Compile mode mappings
+package.loaded['compile-mode'] = nil; require('compile-mode').reset()
 local compile = require('compile-mode')
 
-vim.keymap.set("n", "<leader>c", compile.command, named_opts("Run a command"))
-vim.keymap.set("n", "<leader>r", compile.recompile, named_opts("Re-run last command"))
-vim.keymap.set('n', '<leader>Cb', compile.scroll_to_bottom, named_opts("Scroll compile buffer to [b]ottom"))
-vim.keymap.set('n', '<leader>Ct', compile.toggle_window, named_opts("[T]oggle compile buffer"))
-vim.keymap.set('n', '<leader>Ch', compile.compile, named_opts("[T]oggle compile buffer"))
-vim.keymap.set('n', '<leader>nc', '<cmd>silent grep! -Tsh -Tmd nocommit<cr>', named_opts("Review [n][c]ommits"))
+vim.keymap.set("n", "<leader>c", require('compile-mode').command, named_opts("Run a command"))
+vim.keymap.set("n", "<leader>r", require('compile-mode').recompile, named_opts("Re-run last command"))
+vim.keymap.set('n', '<leader>Cb', require('compile-mode').scroll_to_bottom,
+  named_opts("Scroll compile buffer to [b]ottom"))
+vim.keymap.set('n', '<leader>Ct', require('compile-mode').toggle_window, named_opts("[T]oggle compile buffer"))
+vim.keymap.set('n', '<leader>Ch', require('compile-mode').compile, named_opts("[T]oggle compile buffer"))

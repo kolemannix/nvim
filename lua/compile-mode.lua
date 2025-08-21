@@ -5,6 +5,11 @@ local compile_buf = nil
 local compile_win = nil
 local command_history = {}
 
+local function scroll_to_bottom(win, buf)
+  local line_count = vim.api.nvim_buf_line_count(buf)
+  vim.api.nvim_win_set_cursor(win, { line_count, 0 })
+end
+
 function P.reset()
   compile_buf = nil
   compile_win = nil
@@ -20,9 +25,13 @@ local function get_compile_buffer()
   -- Find a buffer named *compile*
   local buffers = vim.api.nvim_list_bufs()
   for _, buf in ipairs(buffers) do
-    if vim.api.nvim_buf_is_valid(buf) and vim.api.nvim_buf_get_name(buf) == "*compile*" then
-      compile_buf = buf
-      return compile_buf
+    if vim.api.nvim_buf_is_valid(buf) then
+      -- Extract just the buffer name from the full path
+      local buf_name = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(buf), ':t')
+      if buf_name == "*compile*" then
+        compile_buf = buf
+        return compile_buf
+      end
     end
   end
 
@@ -94,7 +103,14 @@ local function send_command(cmd, focus)
   local expanded_cmd = vim.fn.expand(cmd)
 
   if chan > 0 then
+    scroll_to_bottom(win, buf)
     vim.api.nvim_chan_send(chan, expanded_cmd .. "\n")
+    -- Small delay to let the scroll take effect before sending command
+    -- vim.defer_fn(function()
+    --   if chan > 0 then
+    --     vim.api.nvim_chan_send(chan, expanded_cmd .. "\n")
+    --   end
+    -- end, 10)
   end
 end
 
@@ -191,21 +207,15 @@ end
 function P.scroll_to_bottom()
   local buf = get_compile_buffer()
   if not buf then
-    -- NOTE(scroll_to_bottom): No compile buffer exists, nothing to scroll
     return
   end
 
   local win = find_compile_window()
   if not win then
-    -- NOTE(scroll_to_bottom): Compile buffer exists but not visible, should we open it?
     return
   end
 
-  -- Get the total number of lines in the buffer
-  local line_count = vim.api.nvim_buf_line_count(buf)
-
-  -- Set cursor to the last line
-  vim.api.nvim_win_set_cursor(win, { line_count, 0 })
+  scroll_to_bottom(win, buf)
 end
 
 vim.api.nvim_create_user_command('C', function(opts)
@@ -216,9 +226,11 @@ vim.api.nvim_create_user_command('C', function(opts)
     P.compile(false)
   end
 end, {
-  nargs = '*',           -- Accept any number of arguments
-  complete = 'shellcmd', -- Enable shell command completion
+  nargs = '*',               -- Accept any number of arguments
+  complete = 'shellcmdline', -- Enable shell command completion
   desc = 'Run command in compile terminal'
 })
+
+--print("I initialized compile-mode " .. vim.inspect(command_history))
 
 return P

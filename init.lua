@@ -22,7 +22,11 @@ local plugins = {
       require("kanso").setup {
         bold = true,
         italics = false,
-        keywordStyle = { bold = true }
+        keywordStyle = { italic = false },
+        background = {
+          dark = "zen",
+          light = "pearl"
+        }
       }
       vim.cmd("colorscheme kanso")
     end

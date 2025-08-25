@@ -21,7 +21,7 @@ vim.opt.sessionoptions = 'curdir,folds,globals,help,tabpages,terminal,winsize'
 vim.opt.completeopt = menu, menuone, noselect
 
 
-vim.wo.number = true
+vim.wo.number = false
 vim.opt.winborder = "rounded"
 
 vim.opt.title = true

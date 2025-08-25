@@ -22,11 +22,14 @@ on_attach = function(client, bufnr)
   vim.keymap.set("n", "]e", function() vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.ERROR }) end,
     named_opts("Next [E]rror"))
   vim.keymap.set("n", "<leader>d", function()
-    -- clear qflist "Diagnostics" first
     vim.fn.setqflist({}, 'r', { title = "Diagnostics" })
-    vim.diagnostic.setqflist()
+    vim.diagnostic.setqflist({ severity = vim.diagnostic.severity.WARNING })
   end, named_opts("[D]iagnostics"))
-  vim.keymap.set("n", "<leader>D", function() vim.diagnostic.setqflist({ severity = vim.diagnostic.severity.ERROR }) end,
+  vim.keymap.set("n", "<leader>D",
+    function()
+      vim.fn.setqflist({}, 'r', { title = "Diagnostics" })
+      vim.diagnostic.setqflist({ severity = vim.diagnostic.severity.ERROR })
+    end,
     named_opts("[D]iagnostics"))
 end
 

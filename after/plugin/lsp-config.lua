@@ -23,7 +23,7 @@ on_attach = function(client, bufnr)
     named_opts("Next [E]rror"))
   vim.keymap.set("n", "<leader>d", function()
     vim.fn.setqflist({}, 'r', { title = "Diagnostics" })
-    vim.diagnostic.setqflist({ severity = vim.diagnostic.severity.WARNING })
+    vim.diagnostic.setqflist({ severity = { min = vim.diagnostic.severity.WARN } })
   end, named_opts("[D]iagnostics"))
   vim.keymap.set("n", "<leader>D",
     function()

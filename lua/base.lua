@@ -5,6 +5,7 @@ vim.g.mapleader = ' '
 vim.keymap.set({ 'n', 'x' }, 's', '<Nop>')
 vim.keymap.set("n", "`", "<nop>")
 vim.keymap.set("n", "R", "<nop>")
+vim.keymap.set("n", "4", "$")
 
 vim.cmd [[ set clipboard+=unnamedplus ]]
 
@@ -76,3 +77,31 @@ vim.cmd [[ au BufRead,BufNewFile *.k1 set syntax=rust ]]
 
 vim.cmd [[ autocmd QuickFixCmdPost [^l]* nested cwindow ]]
 vim.cmd [[ autocmd QuickFixCmdPost    l* nested lwindow ]]
+
+vim.api.nvim_set_hl(0, "User1", { fg = "Green", bg = "bg" })
+vim.api.nvim_set_hl(0, "User2", { fg = "Yellow", bg = "bg" })
+vim.api.nvim_set_hl(0, "User3", { fg = "Red", bg = "bg" })
+vim.api.nvim_set_hl(0, "User4", { fg = "Blue", bg = "bg" })
+vim.api.nvim_set_hl(0, "User5", { fg = "White", bg = "bg" })
+
+vim.cmd [[
+" Status Line
+set laststatus=2
+
+hi User1 guifg=Green  ctermbg=bg
+hi User2 guifg=Yellow ctermbg=bg
+hi User3 guifg=Red    ctermbg=bg
+hi User4 guifg=Blue   ctermbg=bg
+hi User5 guifg=White  ctermbg=bg
+
+set statusline=
+set statusline +=%1*\ %n\ %*            "buffer number
+set statusline +=%5*%{&ff}%*            "file format
+set statusline +=%3*%y%*                "file type
+set statusline +=%4*\ %<%F%*            "full path
+set statusline +=%2*%m%*                "modified flag
+set statusline +=%1*%=%5l%*             "current line
+set statusline +=%2*/%L%*               "total lines
+set statusline +=%1*%4v\ %*             "virtual column number
+set statusline +=%2*0x%04B\ %*          "character under cursor
+]]

@@ -26,6 +26,10 @@ local plugins = {
         background = {
           dark = "zen",
           light = "pearl"
+        },
+        foreground = {
+          dark = "saturated",
+          light = "saturated"
         }
       }
       vim.cmd("colorscheme kanso")

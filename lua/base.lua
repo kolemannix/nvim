@@ -78,11 +78,9 @@ vim.cmd [[ au BufRead,BufNewFile *.k1 set syntax=rust ]]
 vim.cmd [[ autocmd QuickFixCmdPost [^l]* nested cwindow ]]
 vim.cmd [[ autocmd QuickFixCmdPost    l* nested lwindow ]]
 
-vim.api.nvim_set_hl(0, "User1", { fg = "Green", bg = "bg" })
-vim.api.nvim_set_hl(0, "User2", { fg = "Yellow", bg = "bg" })
-vim.api.nvim_set_hl(0, "User3", { fg = "Red", bg = "bg" })
-vim.api.nvim_set_hl(0, "User4", { fg = "Blue", bg = "bg" })
-vim.api.nvim_set_hl(0, "User5", { fg = "White", bg = "bg" })
+vim.o.foldmethod = "indent"
+vim.o.foldminlines = 10
+vim.o.foldnestmax = 3
 
 vim.cmd [[
 " Status Line

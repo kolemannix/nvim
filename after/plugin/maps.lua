@@ -47,6 +47,12 @@ require('telescope').setup {
     }
   }
 }
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "TelescopePrompt", "TelescopeResults" },
+  callback = function()
+    vim.opt_local.foldenable = false
+  end,
+})
 
 require('telescope').load_extension('fzf')
 require('telescope').load_extension("live_grep_args")
@@ -144,7 +150,6 @@ vim.keymap.set('n', '<C-j>', '<C-w>j')
 vim.keymap.set('n', '<C-k>', '<C-w>k')
 vim.keymap.set('n', '<C-l>', '<C-w>l')
 vim.keymap.set('n', '<C-q>', '<C-w>q')
-vim.keymap.set('n', '<tab>', '<C-^>')
 
 -- Swap lines up and down
 

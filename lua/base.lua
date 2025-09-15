@@ -86,11 +86,11 @@ vim.cmd [[
 " Status Line
 set laststatus=2
 
-hi User1 guifg=Green  ctermbg=bg
-hi User2 guifg=Yellow ctermbg=bg
-hi User3 guifg=Red    ctermbg=bg
-hi User4 guifg=Blue   ctermbg=bg
-hi User5 guifg=White  ctermbg=bg
+hi User1 guifg=Green  guibg=bg
+hi User2 guifg=Yellow guibg=bg
+hi User3 guifg=Red    guibg=bg
+hi User4 guifg=Blue   guibg=bg
+hi User5 guifg=White  guibg=bg
 
 set statusline=
 set statusline +=%1*\ %n\ %*            "buffer number

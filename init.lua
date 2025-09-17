@@ -33,6 +33,7 @@ local plugins = {
         }
       }
       vim.cmd("colorscheme kanso")
+      vim.defer_fn(function() require('knixstatusline').setup() end, 100)
     end
   },
   {

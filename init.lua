@@ -32,7 +32,6 @@ local plugins = {
           -- light = "saturated"
         }
       }
-      print("colorscheme kanso")
       vim.cmd("colorscheme kanso")
     end
   },

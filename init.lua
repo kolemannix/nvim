@@ -28,10 +28,11 @@ local plugins = {
           light = "pearl"
         },
         foreground = {
-          dark = "saturated",
-          light = "saturated"
+          -- dark = "saturated",
+          -- light = "saturated"
         }
       }
+      print("colorscheme kanso")
       vim.cmd("colorscheme kanso")
     end
   },

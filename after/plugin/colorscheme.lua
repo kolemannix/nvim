@@ -1,36 +1,43 @@
--- vim.api.nvim_set_hl(0, 'IlluminatedWordText', vim.api.nvim_get_hl_by_name('Search', false))
--- vim.cmd [[ hi IlluminatedWordText NONE ]]
--- vim.cmd [[ hi! link IlluminatedWordText Search ]]
--- vim.cmd [[ hi! link IlluminatedWordRead Search ]]
--- vim.cmd [[ hi! link IlluminatedWordWrite guibg=#6c7086 ]]
+Palette = {
+  black                = "#090E13",
+  red                  = "#c4746e",
+  green                = "#8a9a7b",
+  yellow               = "#c4b28a",
+  blue                 = "#8ba4b0",
+  magenta              = "#a292a3",
+  cyan                 = "#8ea4a2",
+  white                = "#a4a7a4",
+  bright_black         = "#5C6066",
+  bright_red           = "#e46876",
+  bright_green         = "#87a987",
+  bright_yellow        = "#e6c384",
+  bright_blue          = "#7fb4ca",
+  bright_magenta       = "#938aa9",
+  bright_cyan          = "#7aa89f",
+  bright_white         = "#c5c9c7",
+  background           = "#090E13",
+  foreground           = "#c5c9c7",
+  cursor_color         = "#c5c9c7",
+  selection_background = "#22262D",
+  selection_foreground = "#c5c9c7",
+}
 
+-- set hl groups with lua
+vim.api.nvim_set_hl(0, 'User1', { fg = Palette.green })
+vim.api.nvim_set_hl(0, 'User2', { fg = Palette.foreground })
+vim.api.nvim_set_hl(0, 'User3', { fg = Palette.red })
+vim.api.nvim_set_hl(0, 'User4', { fg = Palette.white })
+vim.api.nvim_set_hl(0, 'User6', { fg = Palette.yellow })
 
--- Highlight instead of underline for illuminate
--- vim.cmd [[ hi! IlluminatedWordText  guibg=#38384d gui=NONE]]
--- vim.cmd [[ hi! IlluminatedWordRead  guibg=#38384d gui=NONE]]
--- vim.cmd [[ hi! IlluminatedWordWrite guibg=#38384d gui=NONE]]
+vim.cmd [[
+  set laststatus=2
 
--- require('ayu')
--- ayu.setup {
---   mirage = true,
--- }
---
-
--- require("catppuccin").setup({
---   no_italic = true,
---   no_underline = true,
--- })
--- vim.cmd [[ colorscheme catppuccin ]]
-
--- require('onedark').setup {
---   style = 'darker'
--- }
--- require('onedark').load()
-
--- Available values: 'hard', 'medium'(default), 'soft'
-
--- vim.o.background = "dark" -- or "light" for light mode
--- vim.cmd [[ let g:everforest_background = 'hard' ]]
--- vim.cmd [[ colorscheme everforest ]]
--- vim.cmd [[ highlight Normal ctermbg=NONE guibg=NONE ]]
--- vim.cmd [[ highlight Normal ctermbg=NONE guibg=NONE ]]
+  set statusline=
+  set statusline+=%6*\ %<%F%*            "full path
+  set statusline+=%3*%m%*                "modified flag
+  set statusline+=%4*\ %y%*              "file type
+  set statusline+=%1*%=%5l%*             "current line
+  set statusline+=%2*/%L%*               "total lines
+  set statusline+=%1*%4v\ %*             "virtual column number
+  set statusline+=%6*0x%04B\ %*          "character under cursor
+]]

@@ -31,13 +31,26 @@ M.setup = function()
   vim.api.nvim_set_hl(0, 'User4', { fg = M.Palette.white })
   vim.api.nvim_set_hl(0, 'User6', { fg = M.Palette.yellow })
 
-  vim.cmd [[
-    set laststatus=2
+  local inspirations = {
+    'every second counts',
+    'how you spend your days is how you spend your life',
+    'Hello, World!',
+    'be still and know'
+  }
+  math.randomseed(os.time())
+  local random_index = math.random(#inspirations)
+  local inspiration = inspirations[random_index]
+  local s = '%1* ' .. inspiration .. '%*'
 
-    set statusline=
+  vim.o.laststatus = 2
+  vim.o.statusline = ''
+  vim.cmd [[
     set statusline+=%6*\ %<%F%*            "full path
     set statusline+=%3*%m%*                "modified flag
     set statusline+=%4*\ %y%*              "file type
+  ]]
+  vim.o.statusline = vim.o.statusline .. s
+  vim.cmd [[
     set statusline+=%1*%=%5l%*             "current line
     set statusline+=%2*/%L%*               "total lines
     set statusline+=%1*%4v\ %*             "virtual column number

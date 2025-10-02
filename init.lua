@@ -1,4 +1,3 @@
-require('globals')
 require('base')
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -37,17 +36,6 @@ local plugins = {
     end
   },
   {
-    "folke/lazydev.nvim",
-    ft = "lua", -- only load on lua files
-    opts = {
-      library = {
-        -- See the configuration section for more details
-        -- Load luvit types when the `vim.uv` word is found
-        { path = "${3rd}/luv/library", words = { "vim%.uv" } },
-      },
-    },
-  },
-  {
     "j-hui/fidget.nvim",
     opts = {
       -- options
@@ -55,34 +43,6 @@ local plugins = {
   },
 
   'echasnovski/mini.nvim',
-  {
-    "folke/snacks.nvim",
-    priority = 1000,
-    lazy = false,
-    opts = {
-      bigfile = { enabled = true },
-      quickfile = { enabled = false },
-      scratch = { enabled = true },
-      terminal = { enabled = true },
-      git = { enabled = true },
-      lazygit = { enabled = true },
-    },
-    keys = {
-      { "<leader>z",  function() Snacks.zen() end,                desc = "Toggle Zen Mode" },
-      { "<leader>Z",  function() Snacks.zen.zoom() end,           desc = "Toggle Zoom" },
-      { "<leader>.",  function() Snacks.scratch() end,            desc = "Toggle Scratch Buffer" },
-      { "<leader>S",  function() Snacks.scratch.select() end,     desc = "Select Scratch Buffer" },
-      { "<leader>bd", function() Snacks.bufdelete() end,          desc = "[d]elete Buffer" },
-      { "<leader>br", function() Snacks.rename.rename_file() end, desc = "[r]ename File" },
-      { "<leader>gB", function() Snacks.gitbrowse() end,          desc = "Git Browse" },
-      { "<leader>gb", function() Snacks.git.blame_line() end,     desc = "Git Blame Line" },
-      { "<leader>gf", function() Snacks.lazygit.log_file() end,   desc = "Lazygit Current File History" },
-      { "<leader>gg", function() Snacks.lazygit() end,            desc = "Lazygit" },
-      { "<leader>gl", function() Snacks.lazygit.log() end,        desc = "Lazygit Log (cwd)" },
-      { "<c-\\>",     function() Snacks.terminal() end,           desc = "Toggle Terminal" },
-      { "<c-_>",      function() Snacks.terminal() end,           desc = "which_key_ignore" },
-    }
-  },
   {
     -- This plugin is amazing but just too slow
     "ej-shafran/compile-mode.nvim",
@@ -164,7 +124,6 @@ local plugins = {
     -- use opts = {} for passing setup options
     -- this is equivalent to setup({}) function
   },
-
   {
     'Shatur/neovim-session-manager',
     lazy = false,
@@ -292,15 +251,7 @@ local plugins = {
         },
       },
       sources = {
-        default = { "lazydev", "lsp", "path" },
-        providers = {
-          lazydev = {
-            name = "LazyDev",
-            module = "lazydev.integrations.blink",
-            -- make lazydev completions top priority (see `:h blink.cmp`)
-            score_offset = 100,
-          },
-        },
+        default = { "lsp", "path" },
       },
 
       signature = {
@@ -409,6 +360,8 @@ local plugins = {
 
 require("lazy").setup(plugins, opts)
 
+require('globals')
+
 -- todo: finish setting up copilot https://github.com/zbirenbaum/copilot.lua?ref=tamerlan.dev
 
 -- require("bufferchad").setup({
@@ -418,3 +371,5 @@ require("lazy").setup(plugins, opts)
 --   style = "default",            -- default, modern (requires dressing.nvim and nui.nvim), telescope (requires telescope.nvim)
 --   close_mapping = "<Esc><Esc>", -- only for the default style window.
 -- })
+
+-- Set the character used for vertical splits

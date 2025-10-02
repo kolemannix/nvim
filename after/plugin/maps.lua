@@ -270,4 +270,4 @@ vim.keymap.set("n", "<leader>r", require('compile-mode').recompile, named_opts("
 vim.keymap.set('n', '<leader>Cb', require('compile-mode').scroll_to_bottom,
   named_opts("Scroll compile buffer to [b]ottom"))
 vim.keymap.set('n', '<leader>Ct', require('compile-mode').toggle_window, named_opts("[T]oggle compile buffer"))
-vim.keymap.set('n', '<leader>Ch', require('compile-mode').compile, named_opts("[T]oggle compile buffer"))
+vim.keymap.set('n', '<leader>CR', require('compile-mode').reset, named_opts("Reset"))

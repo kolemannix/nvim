@@ -1,5 +1,5 @@
 local stdlib_dir = "/Users/knix/dev/k1/k1lib"
-local lsp_binary = "/Users/knix/dev/k1/target/debug/lsp"
+local lsp_binary = "/Users/knix/dev/k1/target/release/lsp"
 
 -- vim.diagnostic.config({
 --   update_in_insert = true
@@ -58,3 +58,13 @@ vim.keymap.set("n", "[e", function() vim.diagnostic.goto_prev({ severity = vim.d
   named_opts("Prev [E]rror"))
 vim.keymap.set("n", "]e", function() vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.ERROR }) end,
   named_opts("Next [E]rror"))
+vim.keymap.set("n", "<leader>d", function()
+  vim.fn.setqflist({}, 'r', { title = "Diagnostics" })
+  vim.diagnostic.setqflist({ severity = { min = vim.diagnostic.severity.WARN } })
+end, named_opts("[D]iagnostics"))
+vim.keymap.set("n", "<leader>D",
+  function()
+    vim.fn.setqflist({}, 'r', { title = "Diagnostics" })
+    vim.diagnostic.setqflist({ severity = vim.diagnostic.severity.ERROR })
+  end,
+  named_opts("[D]iagnostics"))

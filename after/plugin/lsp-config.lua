@@ -31,6 +31,7 @@ on_attach = function(client, bufnr)
       vim.diagnostic.setqflist({ severity = vim.diagnostic.severity.ERROR })
     end,
     named_opts("[D]iagnostics"))
+  vim.keymap.set("n", "gfb", vim.lsp.buf.format, named_opts("[G]o [F]ormat [B]uffer"))
 end
 
 require("illuminate").configure {
@@ -67,7 +68,13 @@ require('lspconfig')['rust_analyzer'].setup {
         features = { "lsp" }
       },
       -- enable clippy on save
-      checkOnSave = {
+      -- checkOnSave = true,
+      hover = {
+        memoryLayout = {
+          niches = true
+        }
+      },
+      check = {
         command = "clippy"
       },
       diagnostics = {
@@ -77,9 +84,14 @@ require('lspconfig')['rust_analyzer'].setup {
         chainingHints = {
           enable = false
         },
+        discriminantHints = {
+          enable = true
+        },
         parameterHints = {
-          enable = false
-        }
+          enable = true
+        },
+        implicitDrops = true
+
       },
     }
   },
@@ -121,24 +133,3 @@ require 'lspconfig'.lua_ls.setup {
   capabilities = capabilities,
   on_attach = on_attach,
 }
-
--- require('lspconfig').tailwindcss.setup {
---
--- }
---
--- require('lspconfig').terraformls.setup {
---
--- }
-
--- require('lspconfig').clangd.setup {
---   capabilities = capabilities,
---   on_attach = on_attach
--- }
---
--- require('lspconfig').zls.setup {
---   capabilities = capabilities,
---   on_attach = on_attach
--- }
-
---Format async on Save
--- require("lsp-format").setup()

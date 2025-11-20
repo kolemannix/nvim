@@ -60,69 +60,14 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
   }
 )
 
-require('lspconfig')['rust_analyzer'].setup {
-  -- Server-specific settings...
-  settings = {
-    ["rust-analyzer"] = {
-      cargo = {
-        features = { "lsp" }
-      },
-      -- enable clippy on save
-      -- checkOnSave = true,
-      hover = {
-        memoryLayout = {
-          niches = true
-        }
-      },
-      check = {
-        command = "clippy"
-      },
-      diagnostics = {
-        enable = true,
-      },
-      inlayHints = {
-        chainingHints = {
-          enable = false
-        },
-        discriminantHints = {
-          enable = true
-        },
-        parameterHints = {
-          enable = true
-        },
-        implicitDrops = true
 
-      },
-    }
-  },
+vim.lsp.config('clangd', {
   capabilities = capabilities,
   on_attach = on_attach
-}
+})
+vim.lsp.enable('clangd')
 
--- require("typescript").setup({
---   disable_commands = false, -- prevent the plugin from creating Vim commands
---   debug = false, -- enable debug logging for commands
---   go_to_source_definition = {
---     fallback = true, -- fall back to standard LSP definition on failure
---   },
---   server = { -- pass options to lspconfig's setup method
---     capabilities = capabilities,
---     on_attach = on_attach
---   },
--- })
---
-
-require('lspconfig').ocamllsp.setup {
-  capabilities = capabilities,
-  on_attach = on_attach
-}
-
-require('lspconfig').clangd.setup {
-  capabilities = capabilities,
-  on_attach = on_attach
-}
-
-require 'lspconfig'.lua_ls.setup {
+vim.lsp.config('lua_ls', {
   settings = {
     Lua = {
       diagnostics = {
@@ -132,4 +77,5 @@ require 'lspconfig'.lua_ls.setup {
   },
   capabilities = capabilities,
   on_attach = on_attach,
-}
+})
+vim.lsp.enable('lua_ls')

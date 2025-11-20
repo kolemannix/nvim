@@ -44,10 +44,11 @@ M.setup = function()
 
   local inspirations = {
     'every second counts',
-    'how you spend your days is how you spend your life',
     'Hello, World!',
     'be still and know',
     'ill write my way out',
+    'this is water',
+    'Leaf'
   }
   math.randomseed(os.time())
   local random_index = math.random(#inspirations)

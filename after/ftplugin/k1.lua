@@ -15,12 +15,15 @@ function Start_K1(reuse)
       end
     }
   end
+  local buf = vim.api.nvim_get_current_buf()
+  local file = vim.api.nvim_buf_get_name(buf)
+  local root_dir = vim.fs.dirname(file)
   vim.lsp.start({
     name = 'k1-lsp',
     cmd = { lsp_binary },
     cmd_env = { K1_LIB_DIR = stdlib_dir, RUST_BACKTRACE = '1' },
     -- root_dir = vim.fs.dirname(vim.buf),
-    root_dir = vim.fn.getcwd(), -- Use PWD as project root dir.
+    root_dir = root_dir
   }, opts)
 end
 

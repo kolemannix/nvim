@@ -226,8 +226,8 @@ vim.api.nvim_create_user_command('C', function(opts)
     P.compile(false)
   end
 end, {
-  nargs = '*',               -- Accept any number of arguments
-  complete = 'shellcmdline', -- Enable shell command completion
+  nargs = '+',               -- Accept any number of arguments
+  complete = 'shellcmd', -- Enable shell command completion
   desc = 'Run command in compile terminal'
 })
 

@@ -55,98 +55,6 @@ local plugins = {
   },
 
   'echasnovski/mini.nvim',
-  {
-    -- This plugin is amazing but just too slow
-    "ej-shafran/compile-mode.nvim",
-    enabled = false,
-    -- version = "^5.0.0",
-    -- you can just use the latest version:
-    branch = "latest",
-    -- or the most up-to-date updates:
-    -- branch = "nightly",
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      -- if you want to enable coloring of ANSI escape codes in
-      -- compilation output, add:
-      -- { "m00qek/baleia.nvim", tag = "v1.3.0" },
-    },
-    config = function()
-      ---@type CompileModeOpts
-      vim.g.compile_mode = {
-        -- to add ANSI escape code support, add:
-        -- baleia_setup = true,
-
-        recompile_no_fail = true,
-        -- to make `:Compile` replace special characters (e.g. `%`) in
-        -- the command (and behave more like `:!`), add:
-        bang_expansion = true,
-        default_command = "",
-
-        environment = {
-          RUST_BACKTRACE = "1"
-        },
-      }
-
-
-      vim.keymap.set('n', '<leader>c', '<cmd>Recompile<cr>')
-      vim.keymap.set('n', '<leader>C', '<cmd>Compile<cr>')
-
-      -- Setup autocmd for event 'CompilationFinished'
-      vim.api.nvim_create_autocmd('User', {
-        pattern = { "CompilationFinished " },
-        callback = function()
-          -- do something when compilation is finished
-          -- e.g. print a message
-          vim.cmd [[ QuickfixErrors ]]
-          --print("Compilation finished!")
-        end
-      })
-    end
-  },
-
-  {
-    'mikesmithgh/kitty-scrollback.nvim',
-    enabled = true,
-    lazy = true,
-    cmd = { 'KittyScrollbackGenerateKittens', 'KittyScrollbackCheckHealth' },
-    event = { 'User KittyScrollbackLaunch' },
-    version = '*', -- latest stable version, may have breaking changes if major version changed
-    -- version = '^6.0.0', -- pin major version, include fixes and features that do not have breaking changes
-    config = function()
-      require('kitty-scrollback').setup()
-    end,
-  },
-
-  {
-    'nvim-lualine/lualine.nvim',
-    enabled = false,
-    opts = {
-      icons_enabled = false,
-      theme = 'kanagawa-dragon',
-      sections = {
-        lualine_x = { 'encoding' },
-      }
-    }
-  },
-
-  {
-    'windwp/nvim-autopairs',
-    event = "InsertEnter",
-    config = true
-    -- use opts = {} for passing setup options
-    -- this is equivalent to setup({}) function
-  },
-  {
-    'Shatur/neovim-session-manager',
-    lazy = false,
-    config = function()
-      local config = require('session_manager.config')
-      require('session_manager').setup {
-        autoload_mode = { config.AutoloadMode.CurrentDir, config.AutoloadMode.LastSession }
-      }
-    end
-  },
-
 
   {
     "nvim-telescope/telescope.nvim",
@@ -227,7 +135,6 @@ local plugins = {
       end
     end
   },
-  'rrethy/vim-illuminate',
 
   {
     'saghen/blink.cmp',
@@ -324,36 +231,6 @@ local plugins = {
     },
   },
   { "ntpeters/vim-better-whitespace", lazy = false },
-  { 'navarasu/onedark.nvim',          lazy = true },
-  { "catppuccin/nvim",                name = "catppuccin",                        lazy = true },
-  {
-    "shaunsingh/nord.nvim",
-    lazy = true,
-    -- config = function()
-    --   -- Example config in lua
-    --   vim.g.nord_contrast = true
-    --   vim.g.nord_borders = false
-    --   vim.g.nord_disable_background = false
-    --   vim.g.nord_italic = false
-    --   -- vim.g.nord_uniform_diff_background = true
-    --   vim.g.nord_bold = true
-    --
-    --   -- Load the colorscheme
-    --   require('nord').set()
-    -- end,
-  },
-  -- {
-  --   "neanias/everforest-nvim",
-  --   lazy = false,
-  --   version = false,
-  --   config = function()
-  --     require("everforest").setup {
-  --       background = "hard",
-  --       disable_italic_comments = true,
-  --     }
-  --   end
-  -- },
-  -- { "pgdouyon/vim-yin-yang",   lazy = true },
   {
     'rebelot/kanagawa.nvim',
     enabled = false,
@@ -378,3 +255,25 @@ require("lazy").setup(plugins, opts)
 require('globals')
 
 vim.lsp.enable('rust_analyzer')
+vim.lsp.enable('clangd')
+
+vim.api.nvim_create_user_command("R", function(opts)
+  -- Expand % and # BEFORE opening new buffer
+  local current = vim.fn.expand "%:p"
+  local alt = vim.fn.expand "#:p"
+  local cmd = opts.args:gsub("%%:p", current):gsub("%%", current):gsub("#", alt)
+  vim.cmd "new"
+  vim.bo.buftype = "nofile"
+  vim.bo.bufhidden = "hide"
+  vim.bo.swapfile = false
+  vim.b.no_auto_close = true
+  vim.fn.termopen(cmd, {
+    on_stdout = function()
+      vim.schedule(function()
+        vim.cmd [[ stopinsert ]]
+        vim.api.nvim_feedkeys("G", "t", false)
+      end)
+    end,
+  })
+  vim.api.nvim_buf_set_keymap(0, "n", "q", ":q!<CR>", { noremap = true, silent = true })
+end, { nargs = "+", complete = "shellcmdline" })

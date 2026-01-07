@@ -34,19 +34,6 @@ on_attach = function(client, bufnr)
   vim.keymap.set("n", "gfb", vim.lsp.buf.format, named_opts("[G]o [F]ormat [B]uffer"))
 end
 
-require("illuminate").configure {
-  delay = 0,
-  filetypes_denylist = {
-    'NvimTree', 'TelescopePrompt'
-  },
-}
---vim.cmd [[ hi! IlluminatedWordText  gui=underline]]
---vim.cmd [[ hi! IlluminatedWordRead  gui=underline]]
---vim.cmd [[ hi! IlluminatedWordWrite gui=underline]]
-
--- local capabilities = require('cmp_nvim_lsp').default_capabilities()
-local capabilities = {}
-
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
   vim.lsp.diagnostic.on_publish_diagnostics, {
     -- Enable underline, use default values
@@ -60,22 +47,15 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
   }
 )
 
-
-vim.lsp.config('clangd', {
-  capabilities = capabilities,
-  on_attach = on_attach
-})
-vim.lsp.enable('clangd')
-
-vim.lsp.config('lua_ls', {
-  settings = {
-    Lua = {
-      diagnostics = {
-        globals = { 'vim' }
-      }
-    }
-  },
-  capabilities = capabilities,
-  on_attach = on_attach,
-})
-vim.lsp.enable('lua_ls')
+--vim.lsp.config('lua_ls', {
+--  settings = {
+--    Lua = {
+--      diagnostics = {
+--        globals = { 'vim' }
+--      }
+--    }
+--  },
+--  capabilities = capabilities,
+--  on_attach = on_attach,
+--})
+--vim.lsp.enable('lua_ls')

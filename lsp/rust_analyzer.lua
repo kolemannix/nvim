@@ -6,15 +6,27 @@ return {
  settings = {
    ["rust-analyzer"] = {
      cargo = {
-       features = { "lsp" }
+       features = "all"
      },
      -- enable clippy on save
-     -- checkOnSave = true,
      hover = {
        memoryLayout = {
-         niches = true
+         niches = true,
+         padding = "both",
        }
      },
+     completion = {
+       fullFunctionSignatures = {
+         enable = true
+       },
+       postfix = {
+         enable = false
+       },
+       privateEditable = {
+         enable = true
+       }
+     },
+     checkOnSave = true,
      check = {
        command = "clippy"
      },

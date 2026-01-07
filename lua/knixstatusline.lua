@@ -46,7 +46,6 @@ M.setup = function()
     'every second counts',
     'Hello, World!',
     'be still and know',
-    'ill write my way out',
     'this is water',
     'Leaf'
   }
@@ -57,8 +56,8 @@ M.setup = function()
 
   vim.o.laststatus = 2
   vim.o.statusline = ''
+  -- set statusline+=%6*\ %<%F%*            "full path
   vim.cmd [[
-    set statusline+=%6*\ %<%F%*            "full path
     set statusline+=%3*%m%*                "modified flag
     set statusline+=%4*\ %y%*              "file type
   ]]

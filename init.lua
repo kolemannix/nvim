@@ -32,18 +32,20 @@ local plugins = {
         }
       }
       vim.cmd("colorscheme kanso")
-      for _, group in ipairs({
-        "DiagnosticUnderlineError",
-        "DiagnosticUnderlineWarn",
-        "DiagnosticUnderlineInfo",
-        "DiagnosticUnderlineHint",
-      }) do
-        local hl = vim.api.nvim_get_hl(0, { name = group })
-        hl.undercurl = false
-        hl.underline = true
-        hl.bold = false
-        vim.api.nvim_set_hl(0, group, hl)
-      end
+      vim.defer_fn(function() 
+        for _, group in ipairs({
+          "DiagnosticUnderlineError",
+          "DiagnosticUnderlineWarn",
+          "DiagnosticUnderlineInfo",
+          "DiagnosticUnderlineHint",
+        }) do
+          local hl = vim.api.nvim_get_hl(0, { name = group })
+          hl.undercurl = false
+          hl.underline = true
+          hl.bold = false
+          vim.api.nvim_set_hl(0, group, hl)
+        end
+      end, 50)
       vim.defer_fn(function() require('knixstatusline').setup() end, 100)
     end
   },

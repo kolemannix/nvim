@@ -45,9 +45,9 @@ M.setup = function()
   local inspirations = {
     'every second counts',
     'Hello, World!',
-    'be still and know',
     'this is water',
-    'Leaf'
+    'leaf',
+    'timshel'
   }
   math.randomseed(os.time())
   local random_index = math.random(#inspirations)

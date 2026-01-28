@@ -46,7 +46,7 @@ M.setup = function()
     'every second counts',
     'Hello, World!',
     'this is water',
-    'leaf',
+    'leaf, by niggle',
     'timshel'
   }
   math.randomseed(os.time())
@@ -57,10 +57,9 @@ M.setup = function()
   vim.o.laststatus = 2
   vim.o.statusline = ''
   -- set statusline+=%6*\ %<%F%*            "full path
-  vim.cmd [[
-    set statusline+=%3*%m%*                "modified flag
-    set statusline+=%4*\ %y%*              "file type
-  ]]
+  -- set statusline+=%3*%m%*                "modified flag
+  -- set statusline+=%4*\ %y%*              "file type
+  -- vim.cmd [[ ]]
   vim.o.statusline = vim.o.statusline .. s
   vim.cmd [[
     set statusline+=%1*%=%5l%*             "current line

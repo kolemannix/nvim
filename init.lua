@@ -1,5 +1,13 @@
 require('base')
 
+vim.api.nvim_create_autocmd({ 'BufEnter', 'BufNewFile' }, {
+  pattern = '*.k1',
+  callback = function(event)
+    vim.cmd [[ set filetype=k1 ]]
+    vim.cmd [[ set syntax=rust ]]
+  end,
+})
+
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system({
@@ -56,7 +64,7 @@ local plugins = {
     },
   },
 
-  'echasnovski/mini.nvim',
+  { 'nvim-mini/mini.nvim', version = '*' },
 
   {
     "nvim-telescope/telescope.nvim",
@@ -138,54 +146,6 @@ local plugins = {
     end
   },
 
-  {
-    'saghen/blink.cmp',
-    lazy = false,
-    -- dependencies = 'rafamadriz/friendly-snippets',
-
-    -- use a release tag to download pre-built binaries
-    version = '1.*',
-    -- OR build from source, requires nightly: https://rust-lang.github.io/rustup/concepts/channels.html#working-with-nightly-rust
-    -- build = 'cargo build --release',
-
-    ---@module 'blink.cmp'
-    ---@type blink.cmp.Config
-    opts = {
-      keymap = {
-        preset = 'enter'
-      },
-      appearance = {
-        -- Sets the fallback highlight groups to nvim-cmp's highlight groups
-        -- Useful for when your theme doesn't support blink.cmp
-        -- will be removed in a future release
-        use_nvim_cmp_as_default = true,
-        -- Set to 'mono' for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
-        -- Adjusts spacing to ensure icons are aligned
-        nerd_font_variant = 'mono'
-      },
-      completion = {
-        trigger = {
-          show_on_keyword = false,
-          show_on_trigger_character = false,
-        },
-        accept = { auto_brackets = { enabled = true } },
-        ghost_text = { enabled = false },
-        menu = {
-          auto_show = false,
-        },
-      },
-      sources = {
-        default = { "lsp", "path" },
-      },
-
-      signature = {
-        enabled = true,
-        trigger = {
-          show_on_insert = true
-        }
-      }
-    }
-  },
   { 'scalameta/nvim-metals',          dependencies = { 'nvim-lua/plenary.nvim' }, lazy = true },
 
   {
@@ -232,24 +192,90 @@ local plugins = {
       -- { "R",     mode = { "o", "x" },      function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
     },
   },
-  { "ntpeters/vim-better-whitespace", lazy = false },
   {
-    'rebelot/kanagawa.nvim',
-    enabled = false,
-    lazy = false,
-    config = function()
-      require('kanagawa').setup {
-        keywordStyle = { italic = false },
-        commentStyle = { italic = false },
-        statementStyle = { bold = true },
-        transparent = false,
-        background = {
-          dark = "dragon"
-        }
-      }
-      -- vim.cmd [[ colorscheme kanagawa-dragon ]]
+    "scalameta/nvim-metals",
+    ft = { "scala", "sbt", "java" },
+    opts = function()
+      local metals_config = require("metals").bare_config()
+      metals_config.on_attach = on_attach
+      return metals_config
+    end,
+    config = function(self, metals_config)
+      local nvim_metals_group = vim.api.nvim_create_augroup("nvim-metals", { clear = true })
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = self.ft,
+        callback = function()
+          require("metals").initialize_or_attach(metals_config)
+        end,
+        group = nvim_metals_group,
+      })
     end
   },
+  {
+    "jake-stewart/multicursor.nvim",
+    branch = "1.0",
+    config = function()
+        local mc = require("multicursor-nvim")
+        mc.setup()
+
+        local set = vim.keymap.set
+
+        -- Add or skip cursor above/below the main cursor.
+        set({"n", "x"}, "<leader>K", function() mc.lineAddCursor(-1) end)
+        set({"n", "x"}, "<leader>J", function() mc.lineAddCursor(1) end)
+        set({"n", "x"}, "<leader>K", function() mc.lineSkipCursor(-1) end)
+        set({"n", "x"}, "<leader>J", function() mc.lineSkipCursor(1) end)
+
+        -- Add or skip adding a new cursor by matching word/selection
+        set({"n", "x"}, "<leader>N", function() mc.matchAddCursor(1) end)
+        set({"n", "x"}, "<leader>s", function() mc.matchSkipCursor(1) end)
+        set({"n", "x"}, "<leader>N", function() mc.matchAddCursor(-1) end)
+        set({"n", "x"}, "<leader>S", function() mc.matchSkipCursor(-1) end)
+
+        -- Mappings defined in a keymap layer only apply when there are
+        -- multiple cursors. This lets you have overlapping mappings.
+        mc.addKeymapLayer(function(layerSet)
+
+            -- Select a different cursor as the main one.
+            layerSet({"n", "x"}, "<left>", mc.prevCursor)
+            layerSet({"n", "x"}, "<right>", mc.nextCursor)
+
+            layerSet({"n", "x"}, "<C-h>", mc.prevCursor)
+            layerSet({"n", "x"}, "<C-l>", mc.nextCursor)
+            layerSet({"n", "x"}, "<C-k>", mc.prevCursor)
+            layerSet({"n", "x"}, "<C-j>", mc.nextCursor)
+
+            -- Disable and enable cursors.
+            set({"n", "x"}, "<c-q>", mc.toggleCursor)
+
+
+            -- Align cursor columns.
+            set("n", "<leader>a", mc.alignCursors)
+
+            -- Delete the main cursor.
+            layerSet({"n", "x"}, "<leader>x", mc.deleteCursor)
+
+            -- Enable and clear cursors using escape.
+            layerSet("n", "<esc>", function()
+                if not mc.cursorsEnabled() then
+                    mc.enableCursors()
+                else
+                    mc.clearCursors()
+                end
+            end)
+        end)
+
+        -- Customize how cursors look.
+        local hl = vim.api.nvim_set_hl
+        hl(0, "MultiCursorCursor", { reverse = true })
+        hl(0, "MultiCursorVisual", { link = "Visual" })
+        hl(0, "MultiCursorSign", { link = "SignColumn"})
+        hl(0, "MultiCursorMatchPreview", { link = "Search" })
+        hl(0, "MultiCursorDisabledCursor", { reverse = true })
+        hl(0, "MultiCursorDisabledVisual", { link = "Visual" })
+        hl(0, "MultiCursorDisabledSign", { link = "SignColumn"})
+    end
+  }
 }
 
 require("lazy").setup(plugins, opts)

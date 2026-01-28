@@ -77,6 +77,7 @@ require('mini.surround').setup({
   },
   search_method = 'cover_or_next'
 })
+require('mini.align').setup()
 --require('mini.operators').setup({})
 
 require('mini.ai').setup({})
@@ -216,10 +217,7 @@ vim.keymap.set('v', '<leader>*', function()
   require("telescope-live-grep-args.shortcuts").grep_visual_selection(opts)
 end, named_opts('Grep visual selection'))
 
-vim.keymap.set('n', '<bs>', "<C-o>", named_opts('Go back'))
-
 -- <leader>s for Show
-vim.keymap.set('n', '<leader>gd', '<cmd>Gitsigns preview_hunk_inline<cr>', named_opts('Show diff'))
 vim.keymap.set('n', '<leader>sl', vim.diagnostic.open_float, named_opts('Line diagnostics'))
 
 vim.keymap.set('n', '<leader><tab>',
@@ -248,20 +246,20 @@ vim.keymap.set('n', '<leader>h/', function() ts_grep_from_dir('~/.config/nvim') 
 vim.keymap.set('n', '<leader>hh', require('telescope.builtin').help_tags, named_opts('Help'))
 
 -- Toggle the quickfix window with tab
-vim.keymap.set('n', '`', function()
+local toggle_qf = function()
   vim.cmd(vim.fn.getqflist({ winid = 0 }).winid ~= 0 and 'cclose' or 'copen')
-end, named_opts('Toggle quickfix'))
+end
+
+vim.keymap.set('n', '`', toggle_qf, named_opts('Toggle quickfix'))
 
 -- Forward / Back
-vim.keymap.set("n", "]g", "<cmd>Gitsigns next_hunk<cr>", named_opts("Next hunk"))
-vim.keymap.set("n", "[g", "<cmd>Gitsigns prev_hunk<cr>", named_opts("Prev hunk"))
+vim.keymap.set("n", "]g",         "<cmd>Gitsigns next_hunk<cr>",                                 named_opts("Next hunk"))
+vim.keymap.set("n", "[g",         "<cmd>Gitsigns prev_hunk<cr>",                                 named_opts("Prev hunk"))
 vim.keymap.set("n", "<leader>gz", '<cmd>Gitsigns reset_hunk<CR>')
-vim.keymap.set("n", "<leader>?", require('telescope.builtin').command_history, named_opts("Command history"))
---
+vim.keymap.set("n", "<leader>?",  require('telescope.builtin').command_history,                  named_opts("Command history"))
 
-vim.keymap.set("n", "<space>c", "<cmd>nos ene | setl bt=nofile bh=wipe | call feedkeys(':r !', 'n')<CR>")
-vim.keymap.set('n', 'gf', '<cmd>vsplit<cr>gF', named_opts("[G]o to [F]ile and line (in vsplit)"))
-vim.keymap.set('n', '<leader>nc', '<cmd>silent grep! -Tsh -Tmd nocommit<cr>', named_opts("Review [n][c]ommits"))
+vim.keymap.set('n', 'gf',         '<cmd>vsplit<cr>gF',                                           named_opts("[G]o to [F]ile and line (in vsplit)"))
+vim.keymap.set('n', '<leader>nc', '<cmd>silent grep! -Tsh -Tmd nocommit<cr>',                    named_opts("Review [n][c]ommits"))
 
 -- Compile mode mappings
 package.loaded['compile-mode'] = nil; require('compile-mode').reset()

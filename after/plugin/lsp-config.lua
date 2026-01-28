@@ -24,6 +24,7 @@ on_attach = function(client, bufnr)
     end,
     named_opts("[D]iagnostics"))
   vim.keymap.set("n", "gff", vim.lsp.buf.format, named_opts("[G]o [F]ormat [f]buffer"))
+  vim.keymap.set("i", "<C-h>", vim.lsp.buf.signature_help, named_opts("[H]elp signature"))
 end
 
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(

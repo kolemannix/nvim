@@ -146,7 +146,7 @@ end
 
 local opts = { noremap = true, silent = true }
 
-vim.keymap.set('n', '<leader>bd', '<cmd>bd<cr>')
+vim.keymap.set('n', '<leader>bd', require('mini.bufremove').delete)
 
 vim.keymap.set('n', '<C-h>', '<C-w>h')
 vim.keymap.set('n', '<C-j>', '<C-w>j')
@@ -161,11 +161,6 @@ vim.keymap.set('v', '<C-k>', ":m '<-2<CR>gv=gv")
 
 -- Get out of terminal with my old tmux prefix, good times
 vim.keymap.set('t', '<C-a>', '<C-\\><C-n>')
-
-vim.keymap.set("n", "<leader>sub", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gcI<Left><Left><Left>]])
-vim.keymap.set("x", "<leader>ss", [[:%s/\%V\<<C-r><C-w>\>/<C-r><C-w>/gcI<Left><Left><Left>]])
-
-vim.keymap.set('i', 'jk', '<esc>', opts)
 
 -- Does not play nice with mini.animate scroll, use one or the other
 -- I'm using neovide now so ditching these and using mini.animate for now!

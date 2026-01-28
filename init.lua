@@ -145,9 +145,6 @@ local plugins = {
       end
     end
   },
-
-  { 'scalameta/nvim-metals',          dependencies = { 'nvim-lua/plenary.nvim' }, lazy = true },
-
   {
     'zbirenbaum/copilot.lua',
     cmd = "Copilot",

@@ -52,7 +52,7 @@ M.setup = function()
   math.randomseed(os.time())
   local random_index = math.random(#inspirations)
   local inspiration = inspirations[random_index]
-  local s = '%1* ' .. inspiration .. '%*'
+  -- local s = '%1* ' .. inspiration .. '%*'
 
   vim.o.laststatus = 2
   vim.o.statusline = ''
@@ -60,7 +60,7 @@ M.setup = function()
   -- set statusline+=%3*%m%*                "modified flag
   -- set statusline+=%4*\ %y%*              "file type
   -- vim.cmd [[ ]]
-  vim.o.statusline = vim.o.statusline .. s
+  -- vim.o.statusline = vim.o.statusline .. s
   vim.cmd [[
     set statusline+=%1*%=%5l%*             "current line
     set statusline+=%2*/%L%*               "total lines

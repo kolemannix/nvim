@@ -24,6 +24,7 @@ vim.opt.completeopt = menu, menuone, noselect
 vim.wo.number = false
 vim.opt.winborder = "rounded"
 
+vim.o.shada = "'100,<50,s10,:1000,/100,@100,h" -- Limit ShaDa file (for startup)
 vim.opt.title = true
 vim.opt.autoindent = true
 vim.opt.hlsearch = false
@@ -79,3 +80,9 @@ vim.cmd [[ autocmd QuickFixCmdPost    l* nested lwindow ]]
 -- vim.o.foldmethod = "indent"
 -- vim.o.foldminlines = 10
 -- vim.o.foldnestmax = 3
+--
+
+if vim.g.neovide then
+    -- Put anything you want to happen only in Neovide here
+    vim.o.guifont = "TX-02:h14"
+end

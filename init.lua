@@ -191,6 +191,7 @@ local plugins = {
   },
   {
     "scalameta/nvim-metals",
+    lazy = true,
     ft = { "scala", "sbt", "java" },
     opts = function()
       local metals_config = require("metals").bare_config()

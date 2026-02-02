@@ -1,5 +1,6 @@
 local stdlib_dir = "/Users/knix/dev/k1/k1lib"
-local lsp_binary = "/Users/knix/dev/k1/target/release/lsp"
+-- local lsp_binary = "/Users/knix/dev/k1/target/release/lsp"
+local lsp_binary = "/Users/knix/dev/k1/target/debug/lsp"
 
 -- vim.diagnostic.config({
 --   update_in_insert = true

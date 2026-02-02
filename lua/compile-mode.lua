@@ -231,6 +231,4 @@ end, {
   desc = 'Run command in compile terminal'
 })
 
---print("I initialized compile-mode " .. vim.inspect(command_history))
-
 return P

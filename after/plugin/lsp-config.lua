@@ -23,7 +23,7 @@ on_attach = function(client, bufnr)
       vim.diagnostic.setqflist({ severity = vim.diagnostic.severity.ERROR })
     end,
     named_opts("[D]iagnostics"))
-  vim.keymap.set("n", "gff", vim.lsp.buf.format, named_opts("[G]o [F]ormat [f]buffer"))
+  vim.keymap.set("n", "<leader>lf", vim.lsp.buf.format, named_opts("[l]sp [f]ormat"))
   vim.keymap.set("i", "<C-h>", vim.lsp.buf.signature_help, named_opts("[H]elp signature"))
 end
 

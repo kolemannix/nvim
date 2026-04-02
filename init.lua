@@ -54,7 +54,9 @@ local plugins = {
           vim.api.nvim_set_hl(0, group, hl)
         end
       end, 50)
-      vim.defer_fn(function() require('knixstatusline').setup() end, 100)
+
+      -- My custom status line is cool but I'm feeling more minimal now
+      -- vim.defer_fn(function() require('knixstatusline').setup() end, 100)
     end
   },
   {
@@ -191,6 +193,7 @@ local plugins = {
   },
   {
     "scalameta/nvim-metals",
+    lazy = true,
     ft = { "scala", "sbt", "java" },
     opts = function()
       local metals_config = require("metals").bare_config()

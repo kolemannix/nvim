@@ -26,14 +26,6 @@ M.Palette = {
   background_light     = '#111a23'
 }
 
-vim.cmd [[
-set fillchars=vert:│
-
-" Optional: give split separators a highlight group
-highlight WinSeparator guifg=#c5c9c7 guibg=NONE
-set winhighlight=VertSplit:WinSeparator
-]]
-
 M.setup = function()
   vim.api.nvim_set_hl(0, 'User1', { fg = M.Palette.green, bg = M.background_light })
   vim.api.nvim_set_hl(0, 'User2', { fg = M.Palette.foreground, bg = M.background_light })

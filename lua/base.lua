@@ -20,6 +20,7 @@ vim.opt.sessionoptions = 'curdir,folds,globals,help,tabpages,terminal,winsize'
 
 vim.opt.completeopt = menu, menuone, noselect
 
+vim.opt.laststatus = 0
 
 vim.wo.number = false
 vim.opt.winborder = "rounded"
@@ -35,6 +36,8 @@ vim.opt.showcmd = true
 vim.opt.cmdheight = 1
 vim.opt.expandtab = true
 vim.opt.scrolloff = 10
+vim.opt.sidescroll = 1
+vim.opt.sidescrolloff = 10
 vim.opt.shell = 'zsh'
 vim.opt.backupskip = '/tmp/*,/private/tmp/*'
 vim.opt.swapfile = false
@@ -79,3 +82,11 @@ vim.cmd [[ autocmd QuickFixCmdPost    l* nested lwindow ]]
 -- vim.o.foldmethod = "indent"
 -- vim.o.foldminlines = 10
 -- vim.o.foldnestmax = 3
+--
+vim.cmd [[
+set fillchars=vert:│
+
+highlight WinSeparator guifg=#c5c9c7 guibg=NONE
+set winhighlight=VertSplit:WinSeparator
+]]
+

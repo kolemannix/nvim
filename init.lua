@@ -1,13 +1,5 @@
 require('base')
 
-vim.api.nvim_create_autocmd({ 'BufEnter', 'BufNewFile' }, {
-  pattern = '*.k1',
-  callback = function(event)
-    vim.cmd [[ set filetype=k1 ]]
-    vim.cmd [[ set syntax=rust ]]
-  end,
-})
-
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system({
@@ -21,6 +13,10 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 local plugins = {
+  {
+    "kolemannix/k1.nvim",
+    ft = "k1",
+  },
   {
     "webhooked/kanso.nvim",
     lazy = false,

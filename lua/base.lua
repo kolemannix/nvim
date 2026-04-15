@@ -18,7 +18,8 @@ vim.opt.fileencoding = 'utf-8'
 vim.opt.showtabline = 0
 vim.opt.sessionoptions = 'curdir,folds,globals,help,tabpages,terminal,winsize'
 
-vim.opt.completeopt = menu, menuone, noselect
+vim.opt.completeopt = 'menu,menuone,noselect,noinsert'
+vim.opt.pumheight = 10                          -- max items shown in popup menu
 
 vim.opt.laststatus = 0
 
@@ -89,4 +90,3 @@ set fillchars=vert:│
 highlight WinSeparator guifg=#c5c9c7 guibg=NONE
 set winhighlight=VertSplit:WinSeparator
 ]]
-

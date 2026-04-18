@@ -249,6 +249,8 @@ vim.keymap.set('n', '`', toggle_qf, named_opts('Toggle quickfix'))
 vim.keymap.set("n", "]g",         "<cmd>Gitsigns next_hunk<cr>",                                 named_opts("Next hunk"))
 vim.keymap.set("n", "[g",         "<cmd>Gitsigns prev_hunk<cr>",                                 named_opts("Prev hunk"))
 vim.keymap.set("n", "<leader>gz", '<cmd>Gitsigns reset_hunk<CR>')
+vim.keymap.set("n", "<leader>gg", "<cmd>term lazygit<CR>",                                       named_opts("open lazy[g]it"))
+
 vim.keymap.set("n", "<leader>?",  require('telescope.builtin').command_history,                  named_opts("Command history"))
 
 vim.keymap.set('n', 'gf',         '<cmd>vsplit<cr>gF',                                           named_opts("[G]o to [F]ile and line (in vsplit)"))

@@ -28,7 +28,7 @@ vim.opt.winborder = "rounded"
 
 vim.opt.title = true
 vim.opt.autoindent = true
-vim.opt.hlsearch = false
+vim.opt.hlsearch = true
 vim.opt.incsearch = true
 vim.opt.hidden = true
 vim.opt.errorbells = false

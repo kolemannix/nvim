@@ -281,23 +281,28 @@ require('globals')
 vim.lsp.enable('rust_analyzer')
 vim.lsp.enable('clangd')
 
-vim.api.nvim_create_user_command("R", function(opts)
-  -- Expand % and # BEFORE opening new buffer
-  local current = vim.fn.expand "%:p"
-  local alt = vim.fn.expand "#:p"
-  local cmd = opts.args:gsub("%%:p", current):gsub("%%", current):gsub("#", alt)
-  vim.cmd "new"
-  vim.bo.buftype = "nofile"
-  vim.bo.bufhidden = "hide"
-  vim.bo.swapfile = false
-  vim.b.no_auto_close = true
-  vim.fn.termopen(cmd, {
-    on_stdout = function()
-      vim.schedule(function()
-        vim.cmd [[ stopinsert ]]
-        vim.api.nvim_feedkeys("G", "t", false)
-      end)
-    end,
-  })
-  vim.api.nvim_buf_set_keymap(0, "n", "q", ":q!<CR>", { noremap = true, silent = true })
-end, { nargs = "+", complete = "shellcmdline" })
+local run_in_term = function(prefix)
+  return function(opts)
+    -- Expand % and # BEFORE opening new buffer
+    local current = vim.fn.expand "%:p"
+    local alt = vim.fn.expand "#:p"
+    local cmd = prefix .. opts.args:gsub("%%:p", current):gsub("%%", current):gsub("#", alt)
+    vim.cmd "new"
+    vim.bo.buftype = "nofile"
+    vim.bo.bufhidden = "hide"
+    vim.bo.swapfile = false
+    vim.b.no_auto_close = true
+    vim.fn.termopen(cmd, {
+      on_stdout = function()
+        vim.schedule(function()
+          vim.cmd [[ stopinsert ]]
+          vim.api.nvim_feedkeys("G", "t", false)
+        end)
+      end,
+    })
+    vim.api.nvim_buf_set_keymap(0, "n", "q", ":q!<CR>", { noremap = true, silent = true })
+  end
+end
+
+vim.api.nvim_create_user_command("R", run_in_term(""), { nargs = "+", complete = "shellcmdline" })
+vim.api.nvim_create_user_command("J", run_in_term("just "), { nargs = "+", complete = "shellcmdline" })

@@ -15,6 +15,7 @@ vim.opt.rtp:prepend(lazypath)
 local plugins = {
   {
     "kolemannix/k1.nvim",
+    branch = "master",
     ft = "k1",
   },
   {
@@ -278,8 +279,13 @@ require("lazy").setup(plugins, opts)
 
 require('globals')
 
+vim.lsp.config('*', {
+ -- capabilities = capabilities,
+ on_attach = on_attach
+})
 vim.lsp.enable('rust_analyzer')
 vim.lsp.enable('clangd')
+vim.lsp.enable('k1')
 
 local run_in_term = function(prefix)
   return function(opts)

@@ -188,7 +188,12 @@ vim.keymap.set('n', '<leader>nw', '<cmd>Telekasten goto_thisweek<cr>')
 vim.keymap.set('n', '<leader>nv', '<cmd>Telekasten paste_img_and_link<cr>')
 vim.keymap.set('n', '<leader>nx', '<cmd>Telekasten toggle_todo<cr>')
 
-vim.keymap.set('n', '<leader>M', require('telescope').extensions.metals.commands, named_opts('Metals command picker'))
+
+local function open_lsp_logs()
+  return string.format("<Cmd>term tail -f -n500 %s<CR>", vim.lsp.log.get_filename())
+end
+vim.keymap.set('n', '<leader>ll', open_lsp_logs(), { desc = "Open [l]sp [l]ogs" })
+
 vim.keymap.set('n', '<leader>f', function()
   local opts = require('telescope.themes').get_ivy {
     previewer = false,

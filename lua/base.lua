@@ -6,6 +6,8 @@ vim.keymap.set({ 'n', 'x' }, 's', '<Nop>')
 vim.keymap.set("n", "`", "<nop>")
 vim.keymap.set("n", "R", "<nop>")
 
+vim.keymap.set("n", "<esc>", "<esc><cmd>noh<cr>", {})
+
 vim.cmd [[ set clipboard+=unnamedplus ]]
 
 vim.g.loaded_netrw = 1

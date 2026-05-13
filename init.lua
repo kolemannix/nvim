@@ -15,7 +15,7 @@ vim.opt.rtp:prepend(lazypath)
 local plugins = {
   {
     "kolemannix/k1.nvim",
-    branch = "master",
+    branch = "main",
     ft = "k1",
   },
   {
@@ -194,10 +194,32 @@ local plugins = {
     ft = { "scala", "sbt", "java" },
     opts = function()
       local metals_config = require("metals").bare_config()
-      metals_config.on_attach = on_attach
+      metals_config.init_options.statusBarProvider = "off"
+      metals_config.settings.defaultBspToBuildTool = true
+      metals_config.settings.enableSemanticHighlighting = false
+      metals_config.settings.inlayHints = {
+        byNameParameters = { enable = false },
+        hintsInPatternMatch = { enable = false },
+        implicitArguments = { enable = false },
+        implicitConversions = { enable = false },
+        inferredTypes = { enable = false },
+        typeParameters = { enable = false },
+      }
+      local metals_on_attach = function(client, buffer)
+        vim.keymap.set("n", "<leader>MM", require('telescope').extensions.metals.commands, { desc = "Metals command picker" })
+        vim.keymap.set("n", "<leader>Mf", "<cmd>MetalsRunScalafix<CR>", { desc = "[M]etals Scala[f]ix", buffer = buffer })
+        vim.keymap.set("n", "<leader>Mx", "<cmd>MetalsCompileCancel<CR>", { desc = "[M]etals Compile cancel" })
+        vim.keymap.set("n", "<leader>Mc", "<cmd>MetalsCompileCascade<CR>", { desc = "[M]etals [C]ompile Cascade" })
+        vim.keymap.set("n", "<Leader>Ml", "<cmd>MetalsToggleLogs<CR>", {desc = "MetalsToggleLogs", buffer = buffer})
+        on_attach(client, buffer)
+      end
+      metals_config.on_attach = metals_on_attach
       return metals_config
     end,
     config = function(self, metals_config)
+
+      vim.keymap.set('n', '<leader>M', require('telescope').extensions.metals.commands, named_opts('Metals command picker'))
+
       local nvim_metals_group = vim.api.nvim_create_augroup("nvim-metals", { clear = true })
       vim.api.nvim_create_autocmd("FileType", {
         pattern = self.ft,
@@ -212,65 +234,65 @@ local plugins = {
     "jake-stewart/multicursor.nvim",
     branch = "1.0",
     config = function()
-        local mc = require("multicursor-nvim")
-        mc.setup()
+      local mc = require("multicursor-nvim")
+      mc.setup()
 
-        local set = vim.keymap.set
+      local set = vim.keymap.set
 
-        -- Add or skip cursor above/below the main cursor.
-        set({"n", "x"}, "<leader>K", function() mc.lineAddCursor(-1) end)
-        set({"n", "x"}, "<leader>J", function() mc.lineAddCursor(1) end)
-        set({"n", "x"}, "<leader>K", function() mc.lineSkipCursor(-1) end)
-        set({"n", "x"}, "<leader>J", function() mc.lineSkipCursor(1) end)
+      -- Add or skip cursor above/below the main cursor.
+      set({"n", "x"}, "<leader>K", function() mc.lineAddCursor(-1) end)
+      set({"n", "x"}, "<leader>J", function() mc.lineAddCursor(1) end)
+      set({"n", "x"}, "<leader>K", function() mc.lineSkipCursor(-1) end)
+      set({"n", "x"}, "<leader>J", function() mc.lineSkipCursor(1) end)
 
-        -- Add or skip adding a new cursor by matching word/selection
-        set({"n", "x"}, "<leader>N", function() mc.matchAddCursor(1) end)
-        set({"n", "x"}, "<leader>s", function() mc.matchSkipCursor(1) end)
-        set({"n", "x"}, "<leader>N", function() mc.matchAddCursor(-1) end)
-        set({"n", "x"}, "<leader>S", function() mc.matchSkipCursor(-1) end)
+      -- Add or skip adding a new cursor by matching word/selection
+      set({"n", "x"}, "<leader>N", function() mc.matchAddCursor(1) end)
+      set({"n", "x"}, "<leader>s", function() mc.matchSkipCursor(1) end)
+      set({"n", "x"}, "<leader>N", function() mc.matchAddCursor(-1) end)
+      set({"n", "x"}, "<leader>S", function() mc.matchSkipCursor(-1) end)
 
-        -- Mappings defined in a keymap layer only apply when there are
-        -- multiple cursors. This lets you have overlapping mappings.
-        mc.addKeymapLayer(function(layerSet)
+      -- Mappings defined in a keymap layer only apply when there are
+      -- multiple cursors. This lets you have overlapping mappings.
+      mc.addKeymapLayer(function(layerSet)
 
-            -- Select a different cursor as the main one.
-            layerSet({"n", "x"}, "<left>", mc.prevCursor)
-            layerSet({"n", "x"}, "<right>", mc.nextCursor)
+        -- Select a different cursor as the main one.
+        layerSet({"n", "x"}, "<left>", mc.prevCursor)
+        layerSet({"n", "x"}, "<right>", mc.nextCursor)
 
-            layerSet({"n", "x"}, "<C-h>", mc.prevCursor)
-            layerSet({"n", "x"}, "<C-l>", mc.nextCursor)
-            layerSet({"n", "x"}, "<C-k>", mc.prevCursor)
-            layerSet({"n", "x"}, "<C-j>", mc.nextCursor)
+        layerSet({"n", "x"}, "<C-h>", mc.prevCursor)
+        layerSet({"n", "x"}, "<C-l>", mc.nextCursor)
+        layerSet({"n", "x"}, "<C-k>", mc.prevCursor)
+        layerSet({"n", "x"}, "<C-j>", mc.nextCursor)
 
-            -- Disable and enable cursors.
-            set({"n", "x"}, "<c-q>", mc.toggleCursor)
+        -- Disable and enable cursors.
+        set({"n", "x"}, "<c-q>", mc.toggleCursor)
 
 
-            -- Align cursor columns.
-            set("n", "<leader>a", mc.alignCursors)
+        -- Align cursor columns.
+        set("n", "<leader>a", mc.alignCursors)
 
-            -- Delete the main cursor.
-            layerSet({"n", "x"}, "<leader>x", mc.deleteCursor)
+        -- Delete the main cursor.
+        layerSet({"n", "x"}, "<leader>x", mc.deleteCursor)
 
-            -- Enable and clear cursors using escape.
-            layerSet("n", "<esc>", function()
-                if not mc.cursorsEnabled() then
-                    mc.enableCursors()
-                else
-                    mc.clearCursors()
-                end
-            end)
+        -- Enable and clear cursors using escape.
+        layerSet("n", "<esc>", function()
+          if not mc.cursorsEnabled() then
+            mc.enableCursors()
+          else
+            mc.clearCursors()
+          end
         end)
+      end)
 
-        -- Customize how cursors look.
-        local hl = vim.api.nvim_set_hl
-        hl(0, "MultiCursorCursor", { reverse = true })
-        hl(0, "MultiCursorVisual", { link = "Visual" })
-        hl(0, "MultiCursorSign", { link = "SignColumn"})
-        hl(0, "MultiCursorMatchPreview", { link = "Search" })
-        hl(0, "MultiCursorDisabledCursor", { reverse = true })
-        hl(0, "MultiCursorDisabledVisual", { link = "Visual" })
-        hl(0, "MultiCursorDisabledSign", { link = "SignColumn"})
+      -- Customize how cursors look.
+      local hl = vim.api.nvim_set_hl
+      hl(0, "MultiCursorCursor", { reverse = true })
+      hl(0, "MultiCursorVisual", { link = "Visual" })
+      hl(0, "MultiCursorSign", { link = "SignColumn"})
+      hl(0, "MultiCursorMatchPreview", { link = "Search" })
+      hl(0, "MultiCursorDisabledCursor", { reverse = true })
+      hl(0, "MultiCursorDisabledVisual", { link = "Visual" })
+      hl(0, "MultiCursorDisabledSign", { link = "SignColumn"})
     end
   }
 }
@@ -279,9 +301,31 @@ require("lazy").setup(plugins, opts)
 
 require('globals')
 
+vim.api.nvim_create_autocmd("LspAttach", {
+  desc = "Setup LSP stuff",
+  group = vim.api.nvim_create_augroup("knix-lsp", {}),
+  callback = function(ev)
+    local buf = ev.buf
+    local data = ev.data
+    local client_id = data.client_id
+    local client = assert(vim.lsp.get_client_by_id(client_id))
+    if client:supports_method("textDocument/completion") then
+      vim["bo"][buf]["omnifunc"] = "v:lua.vim.lsp.omnifunc"
+      vim.lsp.completion.enable(true, client.id, buf, { autotrigger = false })
+    end
+    -- if client:supports_method("textDocument/codeLens") then
+    --   vim.lsp.codelens.enable(true, { bufnr = buf, client = client.id })
+    -- end
+    if client:supports_method("textDocument/inlayHint") then
+      vim.lsp.inlay_hint.enable(true, { bufnr = buf })
+    end
+    return nil
+  end,
+})
+
 vim.lsp.config('*', {
- -- capabilities = capabilities,
- on_attach = on_attach
+  -- capabilities = capabilities,
+  on_attach = on_attach
 })
 vim.lsp.enable('rust_analyzer')
 vim.lsp.enable('clangd')

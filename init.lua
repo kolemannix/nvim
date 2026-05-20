@@ -355,4 +355,5 @@ local run_in_term = function(prefix)
 end
 
 vim.api.nvim_create_user_command("R", run_in_term(""), { nargs = "+", complete = "shellcmdline" })
+vim.keymap.set('n', '<leader>j', function() vim.api.nvim_feedkeys(":C just ", "t", false) end, {})
 vim.api.nvim_create_user_command("J", run_in_term("just "), { nargs = "+", complete = "shellcmdline" })

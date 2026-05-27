@@ -100,6 +100,7 @@ local plugins = {
       skip_confirm_for_simple_edits = true,
       keymaps = {
         ["<C-s>"] = false,
+        ["<C-v>"] = { "actions.select", opts = { vertical = true } },
         ["q"] = "actions.close",
         ["<esc>"] = "actions.close",
       },

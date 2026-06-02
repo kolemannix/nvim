@@ -78,7 +78,10 @@ require('mini.surround').setup({
 require('mini.align').setup()
 --require('mini.operators').setup({})
 
-require('mini.ai').setup({})
+require('mini.ai').setup({
+  n_lines = 300,
+  search_method = 'cover'
+})
 require('mini.bufremove').setup({})
 require('mini.bracketed').setup({})
 require('mini.clue').setup({

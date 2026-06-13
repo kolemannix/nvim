@@ -23,7 +23,7 @@ vim.opt.sessionoptions = 'curdir,folds,globals,help,tabpages,terminal,winsize'
 vim.opt.completeopt = 'menu,menuone,noselect,noinsert'
 vim.opt.pumheight = 10                          -- max items shown in popup menu
 
-vim.opt.laststatus = 0
+vim.opt.laststatus = 3
 
 vim.wo.number = false
 vim.opt.winborder = "rounded"

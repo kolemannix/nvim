@@ -20,73 +20,17 @@ local plugins = {
   },
   {
     'yorickpeterse/nvim-grey',
+    enabled = false,
     lazy = false,
     dependencies = { "nvim-telescope/telescope.nvim" },
     config = function()
-      local background    = '#f2f2f2'
       local grey_bg_light = '#ececec'
-      local black         = '#000000'
-      local blue          = '#1561b8'
-      local green         = '#1C5708'
-      local light_green   = '#dfeacc'
-      local light_red     = '#f2d3cd'
-      local red           = '#c4331d'
-      local grey          = '#5e5e5e'
-      local light_grey    = '#e6e6e6'
-      local border        = '#cccccc'
-      local highlight     = '#eeeeee'
-      local dark_yellow   = '#b37f02'
-      local yellow        = '#f9db70'
-      local light_yellow  = '#f9eab3'
-      local orange        = '#a55000'
-      local purple        = '#5c21a5'
-      local white         = '#ffffff'
-      local cyan          = '#007872'
-
+      local yellow = '#f9db70'
 
       vim.cmd("colorscheme grey")
       vim.opt.guicursor = "n-v-c:block-Cursor,i-ci-ve:ver25-Cursor,r-cr:hor20-Cursor,o:hor50-Cursor"
       vim.api.nvim_set_hl(0, 'CursorLine', { bg = grey_bg_light })
       vim.api.nvim_set_hl(0, 'Cursor', { bg = yellow })
-    end
-  },
-  {
-    "webhooked/kanso.nvim",
-    lazy = true,
-    priority = 1000,
-    config = function()
-      require("kanso").setup {
-        bold = true,
-        italics = false,
-        keywordStyle = { italic = false },
-        background = {
-          dark = "zen",
-          light = "pearl"
-        },
-        foreground = {
-          -- dark = "saturated",
-          -- light = "saturated"
-        }
-      }
-      -- vim.cmd("colorscheme kanso")
-      vim.cmd("colorscheme minispring")
-      vim.defer_fn(function() 
-        for _, group in ipairs({
-          "DiagnosticUnderlineError",
-          "DiagnosticUnderlineWarn",
-          "DiagnosticUnderlineInfo",
-          "DiagnosticUnderlineHint",
-        }) do
-          local hl = vim.api.nvim_get_hl(0, { name = group })
-          hl.undercurl = false
-          hl.underline = true
-          hl.bold = false
-          vim.api.nvim_set_hl(0, group, hl)
-        end
-      end, 50)
-
-      -- My custom status line is cool but I'm feeling more minimal now
-      -- vim.defer_fn(function() require('knixstatusline').setup() end, 100)
     end
   },
   {
@@ -332,6 +276,8 @@ local plugins = {
 }
 
 require("lazy").setup(plugins, opts)
+
+vim.cmd.colorscheme("expedition33")
 
 require('globals')
 
